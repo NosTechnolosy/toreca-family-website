@@ -7,6 +7,7 @@
 <meta name="description" content="神戸・三宮のトレーディングカード専門店、トレカfamily。取り扱いカード、買取、在庫確認、アクセス情報をご案内します。">
 <title>トレカfamily｜神戸・三宮のトレーディングカード専門店</title>
 <script src="./support.js"></script>
+<script src="./i18n.js" defer></script>
 </head>
 <body>
 <x-dc>
@@ -132,9 +133,7 @@
           <a href="#access" style-hover="{{ navHover }}">アクセス</a>
           <a href="#contact" style-hover="{{ navHover }}">お問い合わせ</a>
         </nav>
-        <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}">
-          <a href="#" class="tf-btn tf-en" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#2E75B6;border:1.5px solid #CADAEC;border-radius:8px;padding:7px 12px">EN</a>
-        </sc-if>
+        <button type="button" data-language-toggle class="tf-lang-toggle" aria-label="Englishに切り替え" aria-pressed="false" title="Englishに切り替え" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:28px;padding:0;border:1.5px solid #CADAEC;border-radius:8px;background:#fff;color:#1F4E79;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;flex:none">EN</button>
         <a class="tf-x" href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" aria-label="公式X（旧Twitter）" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#142D4C;flex:none" style-hover="{{ xHover }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
         <button type="button" class="tf-burger" aria-label="メニュー" style="display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;border:1.5px solid #D8CFBB;border-radius:10px;background:#fff;cursor:pointer">
           <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
@@ -157,9 +156,7 @@
           <a href="#access" style-hover="{{ navHover }}">アクセス</a>
           <a href="#contact" style-hover="{{ navHover }}">お問い合わせ</a>
         </nav>
-        <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}">
-          <a href="#" class="tf-btn tf-en" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#2E75B6;border:1.5px solid #CADAEC;border-radius:8px;padding:7px 12px">EN</a>
-        </sc-if>
+        <button type="button" data-language-toggle class="tf-lang-toggle" aria-label="Englishに切り替え" aria-pressed="false" title="Englishに切り替え" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:28px;padding:0;border:1.5px solid #CADAEC;border-radius:8px;background:#fff;color:#1F4E79;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;flex:none">EN</button>
         <a class="tf-x" href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" aria-label="公式X（旧Twitter）" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#142D4C;flex:none" style-hover="{{ xHover }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
         <button type="button" class="tf-burger" aria-label="メニュー" style="display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;border:1.5px solid #D8CFBB;border-radius:10px;background:#fff;cursor:pointer">
           <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>

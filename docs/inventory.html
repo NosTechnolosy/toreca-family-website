@@ -7,6 +7,7 @@
 <meta name="description" content="トレカfamilyの在庫確認・カード検索ページです。カード名、カテゴリ、レアリティから店頭在庫の目安を確認できます。">
 <title>在庫確認・カード検索｜トレカfamily</title>
 <script src="./support.js"></script>
+<script src="./i18n.js" defer></script>
 </head>
 <body>
 <x-dc>
@@ -51,6 +52,7 @@
     .tf-sec{padding-left:20px !important;padding-right:20px !important}
     .tf-searchgrid{grid-template-columns:1fr !important}
     .tf-results{grid-template-columns:1fr 1fr !important;gap:16px !important}
+    .tf-foot-grid{grid-template-columns:1fr !important}
     h1{font-size:30px !important}
   }
   @media (max-width:560px){
@@ -73,6 +75,7 @@
           <a href="index.html#access" style-hover="{{ navHover }}">アクセス</a>
           <a href="index.html#contact" style-hover="{{ navHover }}">お問い合わせ</a>
         </nav>
+        <button type="button" data-language-toggle class="tf-lang-toggle" aria-label="Englishに切り替え" aria-pressed="false" title="Englishに切り替え" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:28px;padding:0;border:1.5px solid #CADAEC;border-radius:8px;background:#fff;color:#1F4E79;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;flex:none">EN</button>
         <a class="tf-x" href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" aria-label="公式X（旧Twitter）" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#142D4C;flex:none" style-hover="{{ xHover }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
         <button type="button" class="tf-burger" aria-label="メニュー" style="display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;border:1.5px solid #D8CFBB;border-radius:10px;background:#fff;cursor:pointer">
           <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
@@ -201,7 +204,7 @@
 
   <!-- ===================== FOOTER ===================== -->
   <footer style="position:relative;background:#ffffff;border-top:1px solid #EFE8D9">
-    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:56px 32px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
+    <div class="tf-sec tf-foot-grid" style="max-width:1200px;margin:0 auto;padding:56px 32px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
       <div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
           <img src="assets/logo.avif" alt="トレカfamily" style="width:46px;height:46px;object-fit:contain">
@@ -254,18 +257,18 @@ class Component extends DCLogic {
   _cards() {
     const P = (n) => "¥" + n.toLocaleString();
     return [
-      { name: "リザードン ex SAR", game: "ポケモンカード", rarity: "SAR", code: "SV3a 201/190", price: 42000, stock: "在庫あり" },
-      { name: "ミュウツー ex SR", game: "ポケモンカード", rarity: "SR", code: "SV5M 084/071", price: 3800, stock: "残りわずか" },
-      { name: "ピカチュウ AR", game: "ポケモンカード", rarity: "AR", code: "SV4a 232/190", price: 950, stock: "在庫あり" },
-      { name: "ナンジャモ SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4M 091/066", price: 28000, stock: "在庫なし" },
-      { name: "青眼の白龍 QCSE", game: "遊戯王", rarity: "QCSE", code: "QCCU-JP001", price: 6800, stock: "在庫あり" },
-      { name: "ブラック・マジシャン 25th", game: "遊戯王", rarity: "25th", code: "QCCP-JP001", price: 4200, stock: "残りわずか" },
-      { name: "灰流うらら プリシク", game: "遊戯王", rarity: "20th", code: "20TH-JPC02", price: 15800, stock: "在庫あり" },
-      { name: "モンキー・D・ルフィ SEC", game: "ワンピースカード", rarity: "SEC", code: "OP01-120", price: 9800, stock: "在庫あり" },
-      { name: "シャンクス SR パラレル", game: "ワンピースカード", rarity: "SR-P", code: "OP01-120", price: 5600, stock: "残りわずか" },
-      { name: "ヤマト SR", game: "ワンピースカード", rarity: "SR", code: "OP04-112", price: 1400, stock: "在庫あり" },
-      { name: "エース SR パラレル", game: "ワンピースカード", rarity: "SR-P", code: "OP02-013", price: 3200, stock: "在庫なし" },
-      { name: "ミモザ SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4a 349/190", price: 19800, stock: "在庫あり" },
+      { name: "リザードン ex SAR", search: "Charizard ex SAR", game: "ポケモンカード", rarity: "SAR", code: "SV3a 201/190", price: 42000, stock: "在庫あり" },
+      { name: "ミュウツー ex SR", search: "Mewtwo ex SR", game: "ポケモンカード", rarity: "SR", code: "SV5M 084/071", price: 3800, stock: "残りわずか" },
+      { name: "ピカチュウ AR", search: "Pikachu AR", game: "ポケモンカード", rarity: "AR", code: "SV4a 232/190", price: 950, stock: "在庫あり" },
+      { name: "ナンジャモ SAR", search: "Iono SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4M 091/066", price: 28000, stock: "在庫なし" },
+      { name: "青眼の白龍 QCSE", search: "Blue-Eyes White Dragon QCSE", game: "遊戯王", rarity: "QCSE", code: "QCCU-JP001", price: 6800, stock: "在庫あり" },
+      { name: "ブラック・マジシャン 25th", search: "Dark Magician 25th", game: "遊戯王", rarity: "25th", code: "QCCP-JP001", price: 4200, stock: "残りわずか" },
+      { name: "灰流うらら プリシク", search: "Ash Blossom Joyous Spring", game: "遊戯王", rarity: "20th", code: "20TH-JPC02", price: 15800, stock: "在庫あり" },
+      { name: "モンキー・D・ルフィ SEC", search: "Monkey D. Luffy SEC", game: "ワンピースカード", rarity: "SEC", code: "OP01-120", price: 9800, stock: "在庫あり" },
+      { name: "シャンクス SR パラレル", search: "Shanks SR Parallel", game: "ワンピースカード", rarity: "SR-P", code: "OP01-120", price: 5600, stock: "残りわずか" },
+      { name: "ヤマト SR", search: "Yamato SR", game: "ワンピースカード", rarity: "SR", code: "OP04-112", price: 1400, stock: "在庫あり" },
+      { name: "エース SR パラレル", search: "Ace SR Parallel", game: "ワンピースカード", rarity: "SR-P", code: "OP02-013", price: 3200, stock: "在庫なし" },
+      { name: "ミモザ SAR", search: "Miriam SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4a 349/190", price: 19800, stock: "在庫あり" },
     ].map((c) => ({ ...c, priceText: P(c.price) }));
   }
 
@@ -300,7 +303,7 @@ class Component extends DCLogic {
       if (cat !== "すべて" && c.game !== cat) return false;
       if (rarity !== "すべて" && c.rarity !== rarity) return false;
       if (stock !== "すべて" && c.stock !== stock) return false;
-      if (kw && !(c.name.toLowerCase().includes(kw) || c.code.toLowerCase().includes(kw))) return false;
+      if (kw && !(c.name.toLowerCase().includes(kw) || c.search.toLowerCase().includes(kw) || c.code.toLowerCase().includes(kw))) return false;
       return true;
     }).map((c) => {
       const ss = this._stockStyle(c.stock);
