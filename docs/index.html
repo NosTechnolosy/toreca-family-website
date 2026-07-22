@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="神戸・三宮のトレーディングカード専門店、トレカfamily。取り扱いカード、買取、在庫確認、アクセス情報をご案内します。">
+<title>トレカfamily｜神戸・三宮のトレーディングカード専門店</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail" data-bg-color="#F5F2EA">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#F5F2EA"/>
+    <rect x="470" y="250" width="180" height="250" rx="22" fill="#1F4E79"/>
+    <rect x="560" y="300" width="180" height="250" rx="22" fill="#2E75B6" opacity="0.9"/>
+    <text x="600" y="640" font-family="sans-serif" font-size="74" font-weight="900" fill="#142D4C" text-anchor="middle">トレカfamily</text>
+  </svg>
+</template>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@800;900&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#F5F2EA;font-family:"Zen Kaku Gothic New",system-ui,sans-serif;color:#27313F;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{display:block}
+  a{text-decoration:none;color:inherit;transition:box-shadow .28s ease, background-color .28s ease, border-color .28s ease, color .2s ease, transform .2s ease}
+  .tf-logo{display:inline-flex;align-items:baseline;color:#142D4C;line-height:1;white-space:nowrap}
+  .tf-logo .logo-ja{font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;letter-spacing:-.01em;transform:skewX(-4deg);transform-origin:bottom left}
+  .tf-logo .logo-en{font-family:"Fredoka","M PLUS Rounded 1c",sans-serif;font-weight:700;letter-spacing:-.005em;margin-left:.06em}
+  @keyframes tf-spin{to{transform:rotate(360deg)}}
+  .tf-spin{animation:tf-spin 16s linear infinite;transform-origin:50% 50%}
+  .tf-strength-card{transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease}
+  .tf-flip{perspective:1200px}
+  .tf-flip-inner{position:relative;transition:transform .6s ease;transform-style:preserve-3d}
+  .tf-face{display:block;width:100%;border-radius:16px;-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:0 16px 34px -16px rgba(31,78,121,.30)}
+  .tf-front{position:absolute;inset:0;height:100%;transform:rotateY(180deg)}
+  .tf-flip:hover{z-index:6 !important}
+  .tf-flip.tf-flipped .tf-flip-inner{transform:rotateY(180deg)}
+  .tf-flip:hover .tf-flip-inner{transform:translateY(-12px) scale(1.04) rotateY(180deg)}
+  .tf-mascot{width:104px;height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(20,45,76,.14))}
+  .tf-mascot.wide{width:122px}
+  .tf-mascot.tf-mascot-sm{width:125px}
+  .tf-mascot.tf-mascot-lg{width:114px}
+  @media (max-width:820px){ .tf-mascot{width:56px} .tf-mascot.wide{width:68px} .tf-mascot.tf-mascot-sm{width:68px} .tf-mascot.tf-mascot-lg{width:62px} }
+
+  .tf-btn{transition:transform .25s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease, color .25s ease}
+  .tf-btn:hover{background:#1F4E79 !important;border-color:#1F4E79 !important;color:#ffffff !important;transform:translateY(-2px) scale(1.03) !important;box-shadow:0 12px 26px -8px rgba(31,78,121,.42) !important}
+  .tf-chip{transition:box-shadow .28s ease, border-color .28s ease, color .2s ease}
+  @media (max-width:1010px){
+    .tf-strength-row{flex-direction:column !important;align-items:center !important;gap:22px !important;padding:8px 0 !important}
+    .tf-strength-card{transform:none !important;margin:0 !important;flex:0 0 auto !important;width:100% !important;max-width:304px !important}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tf-flip-inner{transition:none !important;transform:rotateY(180deg) !important}
+  }
+  /* ---------- mobile / responsive ---------- */
+  @media (max-width:820px){
+    .tf-head{gap:12px !important;padding-left:18px !important;padding-right:18px !important}
+    .tf-head > a{font-size:24px !important}
+    .tf-head-right{gap:12px !important}
+    .tf-burger{display:flex !important}
+    .tf-nav{position:absolute !important;top:100% !important;left:0 !important;right:0 !important;flex-direction:column !important;align-items:stretch !important;gap:0 !important;background:#ffffff !important;padding:6px 20px 14px !important;box-shadow:0 14px 26px rgba(20,45,76,.14) !important;border-top:1px solid #ECECEC !important;display:none !important;font-size:16px !important}
+    .tf-nav.tf-nav-open{display:flex !important}
+    .tf-nav > a{padding:14px 4px !important;border-bottom:1px solid #F1ECDF}
+    .tf-hero-row{gap:8px !important;padding-left:0 !important;padding-right:0 !important}
+    .tf-hero-row > div:first-child{padding:6px 8px 0 0 !important;justify-content:flex-start !important;text-align:left !important}
+    .tf-hero-copy{writing-mode:vertical-rl !important;font-size:24px !important;line-height:1.62 !important;letter-spacing:.08em !important;text-align:left !important}
+    .tf-hero-img{min-height:0 !important;aspect-ratio:3/4 !important;border-radius:20px !important}
+    .tf-sign{justify-content:flex-end !important}
+    .tf-badge{left:auto !important;right:16px !important;bottom:-30px !important;width:104px !important;height:104px !important}
+    .tf-badge img{width:80px !important;height:80px !important}
+    .tf-2col,.tf-access-grid{grid-template-columns:1fr !important;gap:28px !important}
+    .tf-foot-grid{grid-template-columns:1fr 1fr !important;gap:26px !important}
+    .tf-sec{padding-left:20px !important;padding-right:20px !important;padding-top:80px !important;padding-bottom:84px !important}
+    .tf-cv{padding:40px 24px !important}
+    section h2{font-size:26px !important;line-height:1.4 !important;text-align:center !important;text-wrap:balance}
+    /* center headings, labels & copy on stacked mobile layout */
+    #heroSection{padding-left:18px !important;padding-right:18px !important}
+    .tf-2col > div,.tf-sec > div{text-align:center !important}
+    .tf-2col [style*="letter-spacing:.2em"],.tf-sec [style*="letter-spacing:.2em"]{text-align:center !important}
+    .tf-2col p,.tf-sec p{margin-left:auto !important;margin-right:auto !important;text-align:center !important;text-wrap:pretty}
+    .tf-2col [style*="flex-wrap:wrap"],.tf-sec [style*="flex-wrap:wrap"]{justify-content:center !important}
+    .tf-chips{justify-content:center !important}
+    /* buy heading row: stack & center */
+    #buy [style*="justify-content:space-between"]{justify-content:center !important;text-align:center !important}
+    .tf-buy-head{justify-content:center !important;text-align:center !important}
+    /* access: give the value full width so it stops over-wrapping */
+    .tf-info-row{grid-template-columns:1fr !important;gap:3px !important;text-align:left !important}
+    .tf-info-row > div:first-child{font-size:12px !important}
+    .tf-map{min-height:220px !important}
+    .tf-buy-img{max-width:100% !important}
+    .tf-inv-img{order:2 !important}
+    .tf-inv-txt{order:1 !important}
+    #inventory .tf-sec{padding-bottom:140px !important}
+    /* keep wave-standing mascots on mobile: nudged in from the edge, feet resting on the wave crest, sitting in the roomy padding band clear of text */
+    .tf-anchor-l{left:12% !important;right:auto !important;transform:translateY(calc(-100% - 29px)) !important}
+    .tf-anchor-r{right:12% !important;left:auto !important;transform:translateY(calc(-100% - 29px)) !important}
+    /* these two read as floating at -29 (running mid-stride / lying pose) — sink them onto the seam to match the others */
+    .tf-anchor-card{transform:translateY(calc(-100% - 14px)) !important}
+    .tf-anchor-sleep{transform:translateY(calc(-100% - 10px)) !important}
+    /* extra room under 取り扱いカード so the box-carrying mascot (top of 買取) doesn't touch the image */
+    #cards .tf-sec{padding-bottom:128px !important}
+    .tf-mascot{width:46px !important}
+    .tf-mascot.wide{width:56px !important}
+    .tf-mascot.tf-mascot-sm{width:50px !important}
+    .tf-mascot.tf-mascot-lg{width:50px !important}
+  }
+  @media (max-width:560px){
+    .tf-sec{padding-top:72px !important;padding-bottom:76px !important}
+    section h2{font-size:24px !important}
+    .tf-hero-copy{font-size:23px !important}
+    .tf-foot-grid{grid-template-columns:1fr !important}
+  }
+</style>
+</helmet>
+
+<div style="background:#F5F2EA">
+
+  <!-- ===================== HEADER (top, static – scrolls away) ===================== -->
+  <header style="position:relative;z-index:40;background:#ffffff;border-bottom:1px solid #ECECEC">
+    <div class="tf-head" style="max-width:1560px;margin:0 auto;padding:22px 44px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <a href="#top" class="tf-logo" style="font-size:32px;line-height:1"><span class="logo-ja">トレカ</span><span class="logo-en">family</span></a>
+      <div class="tf-head-right" style="display:flex;align-items:center;gap:24px">
+        <nav class="tf-nav" style="display:flex;align-items:center;gap:40px;font-size:16px;font-weight:700;color:#2A3646">
+          <a href="#cards" style-hover="{{ navHover }}">取り扱いカード</a>
+          <a href="#buy" style-hover="{{ navHover }}">買取</a>
+          <a href="inventory.html" style-hover="{{ navHover }}">在庫確認</a>
+          <a href="#access" style-hover="{{ navHover }}">アクセス</a>
+          <a href="#contact" style-hover="{{ navHover }}">お問い合わせ</a>
+        </nav>
+        <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}">
+          <a href="#" class="tf-btn tf-en" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#2E75B6;border:1.5px solid #CADAEC;border-radius:8px;padding:7px 12px">EN</a>
+        </sc-if>
+        <a class="tf-x" href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" aria-label="公式X（旧Twitter）" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#142D4C;flex:none" style-hover="{{ xHover }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
+        <button type="button" class="tf-burger" aria-label="メニュー" style="display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;border:1.5px solid #D8CFBB;border-radius:10px;background:#fff;cursor:pointer">
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== STICKY HEADER (appears after hero, follows scroll) ===================== -->
+  <header style="{{ stickyHeaderStyle }}">
+    <div class="tf-head" style="max-width:1560px;margin:0 auto;padding:16px 44px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <a href="#top" class="tf-logo" style="font-size:26px;line-height:1"><span class="logo-ja">トレカ</span><span class="logo-en">family</span></a>
+      <div class="tf-head-right" style="display:flex;align-items:center;gap:24px">
+        <nav class="tf-nav" style="display:flex;align-items:center;gap:40px;font-size:16px;font-weight:700;color:#2A3646">
+          <a href="#cards" style-hover="{{ navHover }}">取り扱いカード</a>
+          <a href="#buy" style-hover="{{ navHover }}">買取</a>
+          <a href="inventory.html" style-hover="{{ navHover }}">在庫確認</a>
+          <a href="#access" style-hover="{{ navHover }}">アクセス</a>
+          <a href="#contact" style-hover="{{ navHover }}">お問い合わせ</a>
+        </nav>
+        <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}">
+          <a href="#" class="tf-btn tf-en" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#2E75B6;border:1.5px solid #CADAEC;border-radius:8px;padding:7px 12px">EN</a>
+        </sc-if>
+        <a class="tf-x" href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" aria-label="公式X（旧Twitter）" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#142D4C;flex:none" style-hover="{{ xHover }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
+        <button type="button" class="tf-burger" aria-label="メニュー" style="display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;border:1.5px solid #D8CFBB;border-radius:10px;background:#fff;cursor:pointer">
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <span id="top"></span>
+
+  <!-- ===================== 01  FV / HERO (inset photo card) ===================== -->
+  <section id="heroSection" style="position:relative;background:#F5F2EA;padding:26px 44px 64px">
+    <div class="tf-hero-row" style="position:relative;max-width:1560px;margin:0 auto;display:flex;align-items:stretch;gap:8px">
+      <!-- vertical catch copy -->
+      <div style="flex:none;display:flex;align-items:flex-start;justify-content:center;padding:26px 20px 0 0">
+        <h1 class="tf-hero-copy" style="writing-mode:vertical-rl;font-size:38px;line-height:1.65;font-weight:900;color:#142D4C;letter-spacing:.1em;margin:0">家族とプレイヤーの、トレカの拠点。</h1>
+      </div>
+      <!-- hero image card (fade slider) -->
+      <div class="tf-hero-img" style="position:relative;flex:1;border-radius:28px;overflow:hidden;min-height:calc(100svh - 165px)">
+        <div id="tf-hero-slides" style="position:absolute;inset:0">
+          <img class="tf-slide" src="assets/hero.jpg" alt="トレカfamily 店前入口" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;transition:opacity 1s ease">
+          <img class="tf-slide" src="assets/hero-2.jpg" alt="ショーケースに並ぶカード" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease">
+          <img class="tf-slide" src="assets/hero-3.jpg" alt="店頭での買取カウンター" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease">
+          <img class="tf-slide" src="assets/hero-4.jpg" alt="ご家族でカード選び" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease">
+        </div>
+        <div style="position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:11px;z-index:4">
+          <button class="tf-dot" type="button" aria-label="スライド1へ" style="width:9px;height:9px;padding:0;border:none;border-radius:50%;background:#ffffff;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .3s ease,background .3s ease"></button>
+          <button class="tf-dot" type="button" aria-label="スライド2へ" style="width:9px;height:9px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .3s ease,background .3s ease"></button>
+          <button class="tf-dot" type="button" aria-label="スライド3へ" style="width:9px;height:9px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .3s ease,background .3s ease"></button>
+          <button class="tf-dot" type="button" aria-label="スライド4へ" style="width:9px;height:9px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .3s ease,background .3s ease"></button>
+        </div>
+      </div>
+      <!-- spinning logo badge overlapping bottom-left of the card -->
+      <div class="tf-badge" style="position:absolute;left:48px;bottom:-42px;width:182px;height:182px;z-index:5;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(20,45,76,.34)">
+        <img class="tf-spin" src="assets/logo.avif" alt="トレカfamily" style="width:142px;height:142px;object-fit:contain">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURE STRIP (白背景セクション) ===================== -->
+  <sc-if value="{{ showFeatureStrip }}">
+    <section style="position:relative;background:#ffffff">
+      <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#ffffff"></path></svg>
+      <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:60px 32px 72px">
+        <!-- heading -->
+        <div style="text-align:center;margin-bottom:42px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px">
+            <span style="width:52px;height:1px;background:linear-gradient(90deg,rgba(199,213,230,0),#C7D5E6)"></span>
+            <span style="color:#2E75B6;font-size:11px">◆</span>
+            <h2 style="font-size:33px;line-height:1.35;font-weight:900;color:#142D4C;letter-spacing:.02em;margin:0">トレカfamilyが選ばれる3つの理由</h2>
+            <span style="color:#2E75B6;font-size:11px">◆</span>
+            <span style="width:52px;height:1px;background:linear-gradient(90deg,#C7D5E6,rgba(199,213,230,0))"></span>
+          </div>
+          <p style="font-size:16px;line-height:1.8;color:#56677C;margin:0">はじめての方も、買取をご希望の方も、安心してご来店いただけます。</p>
+        </div>
+        <!-- cards over soft glow -->
+        <div style="position:relative">
+          <div aria-hidden="true" style="position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);width:min(940px,94%);height:360px;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(46,117,182,.13),rgba(46,117,182,0) 72%);filter:blur(6px);pointer-events:none;z-index:0"></div>
+          <div aria-hidden="true" style="position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:min(720px,80%);height:46px;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(20,45,76,.16),rgba(20,45,76,0) 70%);filter:blur(8px);pointer-events:none;z-index:0"></div>
+          <div class="tf-strength-row" style="position:relative;z-index:1;display:flex;justify-content:center;align-items:flex-start;padding:8px 0">
+            <!-- card 1 (left, behind) -->
+            <div class="tf-strength-card tf-flip" style="position:relative;flex:0 0 322px;transform:rotate(-4deg) translateY(26px);margin-right:-22px;z-index:1">
+              <div class="tf-flip-inner">
+                <img class="tf-face tf-back" src="assets/card-back.png" alt="トレカfamily カード裏面">
+                <img class="tf-face tf-front" src="assets/card-family.png" alt="初心者・家族歓迎">
+              </div>
+            </div>
+            <!-- card 2 (center, forward) -->
+            <div class="tf-strength-card tf-flip" style="position:relative;flex:0 0 344px;transform:translateY(0);margin-right:-22px;z-index:3">
+              <div class="tf-flip-inner">
+                <img class="tf-face tf-back" src="assets/card-back.png" alt="トレカfamily カード裏面">
+                <img class="tf-face tf-front" src="assets/card-buying.png" alt="高価買取">
+              </div>
+            </div>
+            <!-- card 3 (right, behind) -->
+            <div class="tf-strength-card tf-flip" style="position:relative;flex:0 0 322px;transform:rotate(4deg) translateY(26px);z-index:2">
+              <div class="tf-flip-inner">
+                <img class="tf-face tf-back" src="assets/card-back.png" alt="トレカfamily カード裏面">
+                <img class="tf-face tf-front" src="assets/card-secure.png" alt="安心・安全取引">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- closing note -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:44px 0 14px">
+          <span style="width:64px;height:1px;background:linear-gradient(90deg,rgba(199,213,230,0),#C7D5E6)"></span>
+          <span style="color:#2E75B6;font-size:10px">◆</span>
+          <span style="width:64px;height:1px;background:linear-gradient(90deg,#C7D5E6,rgba(199,213,230,0))"></span>
+        </div>
+        <p style="text-align:center;font-size:14.5px;line-height:1.8;color:#7E91A8;margin:0">はじめての方も、カード探しや買取のご相談も、お気軽にお声がけください。</p>
+      </div>
+    </section>
+  </sc-if>
+
+  <!-- ===================== 02  取り扱いカード ===================== -->
+  <section id="cards" style="position:relative;scroll-margin-top:84px;background:#F6F1E6">
+    <div class="tf-mascot-anchor tf-anchor-r tf-anchor-card" style="position:absolute;right:7%;top:0;transform:translateY(calc(-100% - 15px));z-index:2;pointer-events:none">
+      <img class="tf-mascot tf-mascot-sm" src="assets/mascot-card.png" alt="トレカfamily マスコット">
+    </div>
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#F6F1E6"></path></svg>
+    <div class="tf-sec tf-2col" style="max-width:1040px;margin:0 auto;padding:96px 32px;display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center">
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:16px">CARDS WE HANDLE</div>
+        <h2 style="font-size:36px;line-height:1.4;font-weight:900;color:#142D4C;margin:0 0 18px">取り扱いカード</h2>
+        <p style="font-size:16px;line-height:1.95;color:#48586C;margin:0 0 30px;max-width:440px">ポケモン・遊戯王・ワンピースなど主要タイトルを幅広く。シングルからボックス、グレーディング済みカードまで取り揃えています。</p>
+        <div class="tf-chips" style="display:flex;flex-wrap:wrap;gap:10px">
+          <sc-for list="{{ brands }}" as="b" hint-placeholder-count="8">
+            <span class="tf-chip" style="font-size:14px;font-weight:600;color:#142D4C;background:#ffffff;border:1px solid #D8CFBB;border-radius:999px;padding:9px 16px">{{ b }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-radius:18px;overflow:hidden;box-shadow:0 24px 50px -22px rgba(20,45,76,.4);aspect-ratio:4/3">
+        <img src="assets/cards-lineup.png" alt="取り扱いカードのラインナップ" style="width:100%;height:100%;object-fit:cover">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 03  買取表 ===================== -->
+  <section id="buy" style="position:relative;scroll-margin-top:84px;background:#ffffff">
+    <div class="tf-mascot-anchor tf-anchor-l" style="position:absolute;left:9%;top:0;transform:translateY(calc(-100% - 34px));z-index:2;pointer-events:none">
+      <img class="tf-mascot" src="assets/mascot-box.png" alt="トレカfamily マスコット">
+    </div>
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#ffffff"></path></svg>
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:96px 32px">
+      <div class="tf-buy-head" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:40px">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:16px">BUYING</div>
+          <h2 style="font-size:36px;line-height:1.4;font-weight:900;color:#142D4C;margin:0 0 14px">買取表</h2>
+          <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0;max-width:560px">最新の買取価格を画像で掲示しています。店頭ではその場でスピード査定。お手持ちのカードを高価買取いたします。</p>
+        </div>
+        <a href="#contact" class="tf-btn" style="font-size:15px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:10px;padding:14px 22px;white-space:nowrap">買取のご相談はこちら</a>
+      </div>
+      <div>
+        <div class="tf-buy-img" style="max-width:80%;margin:0 auto;position:relative">
+          <div style="border-radius:16px;overflow:hidden;border:1px solid #ECE3D0;box-shadow:0 20px 46px -24px rgba(20,45,76,.4)">
+            <img src="assets/kaitori-hyo.jpg" alt="ポケモンカード BOX 買取表（更新日 2026/06/28）" style="width:100%;height:auto;display:block">
+          </div>
+          <img class="tf-mascot" src="assets/mascot-peek.png" alt="トレカfamily マスコット" style="position:absolute;right:5%;bottom:0;transform:translateY(92%) rotate(180deg);z-index:2;pointer-events:none">
+        </div>
+        <div style="font-size:12.5px;line-height:1.7;color:#93A4BA;margin-top:12px;text-align:center">※ 状態減額なし ・ シュリンク付きの価格です ・ 更新日 2026/06/28</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 04  在庫確認・カード検索 ===================== -->
+  <section id="inventory" style="position:relative;scroll-margin-top:84px;background:#F6F1E6">
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#F6F1E6"></path></svg>
+    <div class="tf-sec tf-2col" style="max-width:1200px;margin:0 auto;padding:96px 32px 168px;display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center">
+      <div class="tf-inv-img" style="border-radius:18px;overflow:hidden;box-shadow:0 24px 50px -22px rgba(20,45,76,.4);aspect-ratio:4/3">
+        <img src="assets/wall-display.png" alt="店内のシングルカード壁面ディスプレイ" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div class="tf-inv-txt">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:16px">INVENTORY</div>
+        <h2 style="font-size:36px;line-height:1.4;font-weight:900;color:#142D4C;margin:0 0 18px">在庫確認・カード検索</h2>
+        <p style="font-size:16px;line-height:1.95;color:#48586C;margin:0 0 32px;max-width:460px">お探しのカードの在庫を確認できます。シングルカードを豊富に取り揃え、店頭でもスタッフがすぐにお調べします。気になる一枚は、お気軽にお問い合わせください。</p>
+        <a href="inventory.html" class="tf-btn" style="display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#142D4C;background:#ffffff;border:1.5px solid #D8CFBB;border-radius:11px;padding:15px 26px;box-shadow:0 10px 24px rgba(20,45,76,.08)">在庫を問い合わせる<span style="font-size:18px">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 05  アクセス / 地図 ===================== -->
+  <section id="access" style="position:relative;scroll-margin-top:84px;background:#ffffff">
+    <div class="tf-mascot-anchor tf-anchor-l" style="position:absolute;left:7%;top:0;transform:translateY(calc(-100% - 32px));z-index:2;pointer-events:none">
+      <img class="tf-mascot tf-mascot-lg" src="assets/mascot-pin.png" alt="トレカfamily マスコット">
+    </div>
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#ffffff"></path></svg>
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:96px 32px">
+      <div style="margin-bottom:40px">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:16px">ACCESS</div>
+        <h2 style="font-size:36px;line-height:1.4;font-weight:900;color:#142D4C;margin:0 0 12px">アクセス・店舗案内</h2>
+        <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0;max-width:560px">各線「三宮」駅からすぐ。はじめての方も迷わずお越しいただけます。</p>
+      </div>
+      <div class="tf-2col tf-access-grid" style="display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:stretch">
+        <!-- map -->
+        <a class="tf-map" href="https://maps.google.com/?q=兵庫県神戸市中央区三宮町1-9-1+センタープラザ" target="_blank" rel="noopener" style="display:block;border-radius:16px;overflow:hidden;min-height:400px;box-shadow:0 18px 40px -24px rgba(20,45,76,.35)">
+          <img src="assets/access-map.png" alt="トレカ family 三宮店 周辺地図" style="width:100%;height:100%;min-height:400px;object-fit:cover">
+        </a>
+        <!-- store info -->
+        <div style="background:#FBF9F2;border:1px solid #ECE3D0;border-radius:16px;padding:34px 32px;box-shadow:0 18px 40px -24px rgba(20,45,76,.35)">
+          <div style="font-size:20px;font-weight:700;color:#142D4C;margin-bottom:22px">トレカfamily 三宮店</div>
+          <sc-for list="{{ storeInfo }}" as="row" hint-placeholder-count="5">
+            <div class="tf-info-row" style="display:grid;grid-template-columns:88px 1fr;gap:16px;padding:14px 0;border-top:1px solid #EFE8D9">
+              <div style="font-size:13px;font-weight:700;color:#9AAAC0;letter-spacing:.04em">{{ row.label }}</div>
+              <div style="font-size:15px;line-height:1.7;color:#3B4C61;white-space:pre-line">{{ row.value }}</div>
+            </div>
+          </sc-for>
+          <a href="#contact" class="tf-btn" style="margin-top:24px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#142D4C;background:#ffffff;border:1.5px solid #D8CFBB;border-radius:10px;padding:14px;box-shadow:0 8px 18px rgba(20,45,76,.08)">行き方を問い合わせる</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 店長の一言 / MESSAGE ===================== -->
+  <section style="position:relative;background:#F6F1E6">
+    <div class="tf-mascot-anchor tf-anchor-r tf-anchor-sleep" style="position:absolute;right:8%;top:0;transform:translateY(calc(-100% - 10px));z-index:2;pointer-events:none">
+      <img class="tf-mascot wide" src="assets/mascot-sleep.png" alt="トレカfamily マスコット">
+    </div>
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#F6F1E6"></path></svg>
+    <div class="tf-sec tf-2col" style="max-width:1200px;margin:0 auto;padding:88px 32px;display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:center">
+      <div style="border-radius:18px;overflow:hidden;box-shadow:0 24px 50px -22px rgba(20,45,76,.4);aspect-ratio:4/5">
+        <img src="assets/staff-consult.png" alt="店長" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:16px">MESSAGE</div>
+        <h2 style="font-size:34px;line-height:1.45;font-weight:900;color:#142D4C;margin:0 0 26px">店長の一言</h2>
+        <p style="font-size:19px;line-height:2.1;color:#3B4C61;margin:0 0 28px;max-width:560px">神戸・三ノ宮のトレーディングカード専門店。安く買えて、買取も高い。スタッフは親切で、英語での接客にも対応しています。はじめての方も、ご家族でも、安心して通えるお店です。</p>
+        <div class="tf-sign" style="display:flex;align-items:center;gap:14px">
+          <span style="width:44px;height:2px;background:#CADAEC"></span>
+          <span style="font-size:15px;font-weight:700;color:#1F4E79">店長 ・ トレカfamily</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 06  お問い合わせ (CV) ===================== -->
+  <section id="contact" style="position:relative;scroll-margin-top:84px;background:#ffffff">
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#ffffff"></path></svg>
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:90px 32px;display:flex;justify-content:center">
+      <div class="tf-cv" style="background:#F9F6EE;border:1px solid #ECE3D0;border-radius:22px;padding:54px 56px;max-width:680px;width:100%;text-align:center;box-shadow:0 30px 60px -34px rgba(20,45,76,.32)">
+        <img src="assets/icon-email.png" alt="お問い合わせ" style="width:96px;height:auto;margin:0 auto 8px">
+        <h2 style="font-size:30px;line-height:1.45;font-weight:900;color:#142D4C;margin:0 0 16px">公式Xでお気軽にお問い合わせ</h2>
+        <p style="font-size:16px;line-height:1.9;color:#56677C;margin:0 0 32px">在庫・買取・ご来店のご相談など、お気軽にどうぞ。英語でのお問い合わせにも対応しています。</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+          <a href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" class="tf-btn" style="font-size:16px;font-weight:700;color:#142D4C;background:#ffffff;border:1.5px solid #D8CFBB;border-radius:11px;padding:16px 32px;box-shadow:0 12px 26px rgba(20,45,76,.08)">公式Xで問い合わせる</a>
+          <a href="#access" class="tf-btn" style="font-size:16px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:11px;padding:16px 32px">アクセスを見る</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer style="position:relative;background:#F6F1E6">
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#F6F1E6"></path></svg>
+    <div class="tf-sec tf-foot-grid" style="max-width:1200px;margin:0 auto;padding:56px 32px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+          <img src="assets/logo.avif" alt="トレカfamily" style="width:46px;height:46px;object-fit:contain">
+          <span style="display:flex;flex-direction:column;line-height:1.15">
+            <span style="font-weight:700;font-size:18px;color:#142D4C">トレカfamily</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;color:#7E91A8">TRADING CARD SHOP</span>
+          </span>
+        </div>
+        <p style="font-size:14px;line-height:1.85;color:#6B7B90;margin:0;max-width:280px">神戸・三ノ宮のトレーディングカード専門店。家族とプレイヤーが安心して通えるお店です。</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#9AAAC0;margin-bottom:16px">サービス</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#48586C">
+          <a href="#cards" style-hover="{{ navHover }}">取り扱いカード</a>
+          <a href="#buy" style-hover="{{ navHover }}">買取</a>
+          <a href="inventory.html" style-hover="{{ navHover }}">在庫確認・カード検索</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#9AAAC0;margin-bottom:16px">店舗情報</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#48586C">
+          <a href="#access" style-hover="{{ navHover }}">アクセス・店舗案内</a>
+          <a href="#contact" style-hover="{{ navHover }}">お問い合わせ</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#9AAAC0;margin-bottom:16px">OTHER</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#48586C">
+          <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}">
+            <a href="#" style-hover="{{ navHover }}">English version</a>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:0 auto;padding:18px 32px 0;border-top:1px solid #E7DEC9">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#9AAAC0">© 2026 トレカfamily ・ KOBE SANNOMIYA</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;showFeatureStrip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;表示切替&quot;},&quot;showEnglish&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;表示切替&quot;}}">
+class Component extends DCLogic {
+  state = { navVisible: false };
+
+  _setVisible(v) {
+    if (v !== this.state.navVisible) this.setState({ navVisible: v });
+  }
+
+  componentDidMount() {
+    const hero = document.getElementById("heroSection");
+
+    // Primary: show the sticky nav once the hero has fully scrolled out of view.
+    if (hero && "IntersectionObserver" in window) {
+      this._io = new IntersectionObserver((entries) => {
+        this._setVisible(!entries[0].isIntersecting);
+      }, { threshold: 0 });
+      this._io.observe(hero);
+    }
+
+    // Fallback for scroll containers the observer can't cover.
+    this._onScroll = () => {
+      const h = document.getElementById("heroSection");
+      if (!h) return;
+      this._setVisible(h.getBoundingClientRect().bottom <= 4);
+    };
+    window.addEventListener("scroll", this._onScroll, { passive: true, capture: true });
+    document.addEventListener("scroll", this._onScroll, { passive: true, capture: true });
+    this._onScroll();
+    this._initHeroSlider();
+    this._initReveal();
+    this._initFlip();
+    this._initNav();
+  }
+
+  _initNav() {
+    const burgers = Array.prototype.slice.call(document.querySelectorAll(".tf-burger"));
+    burgers.forEach((b) => {
+      const head = b.closest("header");
+      if (!head) return;
+      const nav = head.querySelector(".tf-nav");
+      if (!nav) return;
+      b.addEventListener("click", () => nav.classList.toggle("tf-nav-open"));
+      Array.prototype.slice.call(nav.querySelectorAll("a")).forEach((a) =>
+        a.addEventListener("click", () => nav.classList.remove("tf-nav-open"))
+      );
+    });
+  }
+
+  _initFlip() {
+    const cards = Array.prototype.slice.call(document.querySelectorAll(".tf-flip"));
+    const isMobile = window.matchMedia && window.matchMedia("(max-width:1010px)").matches;
+    cards.forEach((c) => {
+      const flip = () => c.classList.add("tf-flipped");
+      c.addEventListener("mouseenter", flip);
+      c.addEventListener("click", flip);
+    });
+    // On mobile there is no hover — auto-flip each card to its front as it scrolls into view.
+    if (isMobile && "IntersectionObserver" in window) {
+      const fio = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add("tf-flipped");
+          fio.unobserve(e.target);
+        });
+      }, { threshold: 0.55 });
+      cards.forEach((c) => fio.observe(c));
+      this._flipIO = fio;
+    }
+  }
+
+  _initReveal() {
+    if (this._revealInit) return;
+    this._revealInit = true;
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    const EASE = "cubic-bezier(.22,1,.36,1)";
+    const items = [];
+    const ancestorPrepped = (el) => { let p = el.parentElement; while (p) { if (p.__reveal) return true; p = p.parentElement; } return false; };
+    const prep = (el, kind, delay) => {
+      if (!el || el.__reveal || ancestorPrepped(el)) return;
+      el.__reveal = true;
+      const base = el.style.transform || "";
+      el.__revealBase = base;
+      const offset = kind === "img" ? "translateY(28px) scale(.96)" : "translateY(24px)";
+      el.style.opacity = "0";
+      el.style.transform = base ? (offset + " " + base) : offset;
+      el.style.transition = "opacity .7s " + EASE + " " + (delay || 0) + "s, transform .7s " + EASE + " " + (delay || 0) + "s";
+      el.style.willChange = "opacity, transform";
+      items.push(el);
+    };
+    const secs = Array.prototype.slice.call(document.querySelectorAll("section"));
+    secs.forEach((sec) => {
+      if (sec.id === "heroSection") return;
+      // BLOCKS (images / cards / panels) — processed first so text inside is skipped
+      Array.prototype.slice.call(sec.querySelectorAll(".tf-strength-card")).forEach((c, i) => prep(c, "img", 0.08 + i * 0.12));
+      Array.prototype.slice.call(sec.querySelectorAll("img")).forEach((img) => {
+        if (img.classList.contains("tf-spin") || img.classList.contains("tf-slide") || img.classList.contains("tf-mascot")) return;
+        if (img.closest(".tf-strength-card")) return;
+        prep(img.parentElement, "img", 0.06);
+      });
+      if (sec.id === "access") Array.prototype.slice.call(sec.querySelectorAll('div[style*="border-radius:16px"]')).forEach((d) => prep(d, "img", 0.06));
+      // TEXT
+      const h2 = sec.querySelector("h2");
+      if (h2) {
+        prep(h2, "text", 0);
+        const eb = h2.previousElementSibling;
+        if (eb && eb.tagName === "DIV") prep(eb, "text", 0);
+      }
+      Array.prototype.slice.call(sec.querySelectorAll("p")).forEach((p) => prep(p, "text", 0.12));
+      Array.prototype.slice.call(sec.querySelectorAll(".tf-chip")).forEach((c, i) => prep(c, "text", 0.15 + i * 0.05));
+    });
+    Array.prototype.slice.call(document.querySelectorAll(".tf-mascot")).forEach((m) => prep(m, "text", 0.05));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.style.opacity = "1";
+        el.style.transform = el.__revealBase || "none";
+        io.unobserve(el);
+        setTimeout(() => { el.style.willChange = "auto"; el.style.transition = ""; }, 1500);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    items.forEach((el) => io.observe(el));
+    this._revealIO = io;
+  }
+
+  _initHeroSlider() {
+    // Guard against stacked timers from re-mounts / hot reloads.
+    if (this._sliderStop) this._sliderStop();
+    const root = document.getElementById("tf-hero-slides");
+    if (!root) return;
+    const slides = Array.prototype.slice.call(root.querySelectorAll(".tf-slide"));
+    const dots = Array.prototype.slice.call(document.querySelectorAll(".tf-dot"));
+    if (slides.length < 2) return;
+    let idx = 0;
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const show = (n) => {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => { s.style.opacity = i === idx ? "1" : "0"; });
+      dots.forEach((d, i) => {
+        d.style.background = i === idx ? "#ffffff" : "rgba(255,255,255,.45)";
+        d.style.transform = i === idx ? "scale(1.25)" : "scale(1)";
+      });
+    };
+    const stop = () => { if (this._sliderTimer) { clearInterval(this._sliderTimer); this._sliderTimer = null; } };
+    const start = () => { stop(); if (reduce) return; this._sliderTimer = setInterval(() => show(idx + 1), 4500); };
+    dots.forEach((d, i) => d.addEventListener("click", () => { show(i); start(); }));
+    this._sliderStop = stop;
+    show(0);
+    start();
+  }
+
+  componentWillUnmount() {
+    if (this._sliderStop) this._sliderStop();
+    if (this._flipIO) this._flipIO.disconnect();
+    if (this._revealIO) this._revealIO.disconnect();
+    if (this._io) this._io.disconnect();
+    if (this._onScroll) {
+      window.removeEventListener("scroll", this._onScroll, true);
+      document.removeEventListener("scroll", this._onScroll, true);
+    }
+  }
+
+  renderVals() {
+    const navHover = { color: "#2E75B6" };
+    const xHover = { color: "#2E75B6", transform: "translateY(-2px)" };
+    const btnHover = { background: "#F4F8FC", borderColor: "#9FC4E8", boxShadow: "0 0 0 3px rgba(46,117,182,.15), 0 14px 30px -8px rgba(46,117,182,.5)" };
+    const btnHoverNavy = { background: "#F4F8FC", borderColor: "#9FC4E8", boxShadow: "0 0 0 3px rgba(46,117,182,.16), 0 16px 32px -8px rgba(31,78,121,.5)" };
+    const outlineHover = { background: "#EAF1F8", borderColor: "#9FC4E8", boxShadow: "0 0 0 3px rgba(46,117,182,.14), 0 12px 26px -8px rgba(46,117,182,.4)" };
+    const enHover = { background: "#EAF1F8", borderColor: "#9FC4E8", boxShadow: "0 0 0 3px rgba(46,117,182,.14)" };
+    const pillHover = { boxShadow: "0 14px 34px rgba(20,45,76,.36)", transform: "translateY(-2px)" };
+    const chipHover = { borderColor: "#9FC4E8", color: "#1F4E79", boxShadow: "0 0 0 3px rgba(46,117,182,.13), 0 6px 16px -6px rgba(46,117,182,.4)" };
+    const cardHover = { boxShadow: "0 18px 38px -16px rgba(20,45,76,.28)", borderColor: "#CADAEC", transform: "translateY(-2px)" };
+
+    const navVisible = this.state.navVisible;
+    const stickyHeaderStyle = {
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+      background: "rgba(255,255,255,.72)",
+      backdropFilter: "saturate(160%) blur(12px)",
+      WebkitBackdropFilter: "saturate(160%) blur(12px)",
+      borderBottom: "1px solid rgba(20,45,76,.08)",
+      boxShadow: "0 4px 20px rgba(20,45,76,.08)",
+      transition: "transform .35s ease, opacity .35s ease",
+      transform: navVisible ? "translateY(0)" : "translateY(-100%)",
+      opacity: navVisible ? 1 : 0,
+      pointerEvents: navVisible ? "auto" : "none",
+    };
+
+    return {
+      pillHover,
+      chipHover,
+      stickyHeaderStyle,
+      showFeatureStrip: this.props.showFeatureStrip ?? true,
+      showEnglish: this.props.showEnglish ?? false,
+
+      navHover, btnHover, btnHoverNavy, outlineHover, enHover, cardHover, xHover,
+
+      features: [
+        { icon: "assets/icon-family.png", title: "初心者・家族歓迎", desc: "はじめての方も、ご家族でも。スタッフが親切にご案内します。" },
+        { icon: "assets/icon-buying.png", title: "高価買取", desc: "ボックスもシングルも高価買取。査定はその場でスピーディに。" },
+        { icon: "assets/icon-secure.png", title: "安心・安全取引", desc: "明朗な価格と丁寧な対応。英語での接客にも対応しています。" },
+      ],
+
+      brands: [
+        "ポケモンカード", "遊戯王", "ワンピースカード",
+      ],
+
+      services: [
+        { img: "assets/buying.png", icon: "assets/icon-buying.png", title: "買取", desc: "お手持ちのカードを高価買取。最新の買取表を掲示し、店頭でスピード査定いたします。", href: "#buy" },
+        { img: "assets/wall-display.png", icon: "assets/icon-inventory.png", title: "在庫確認・カード検索", desc: "お探しのカードの在庫を確認。シングルカードを豊富に取り揃えています。", href: "inventory.html" },
+        { img: "assets/store-interior.png", icon: "assets/icon-access.png", title: "店舗案内・アクセス", desc: "神戸・三ノ宮の店舗まで、迷わず行ける道順をご案内します。", href: "#access" },
+      ],
+
+      storeInfo: [
+        { label: "店名", value: "トレカfamily 三宮店" },
+        { label: "住所", value: "〒650-0021\n兵庫県神戸市中央区三宮町1-9-1\nセンタープラザ 2階" },
+        { label: "最寄駅", value: "JR三宮駅から徒歩6分\nJR元町駅から徒歩7分\nどちらからも近いです" },
+        { label: "営業時間", value: "平日 14:00 – 20:00\n土日 12:00 – 20:00" },
+        { label: "定休日", value: "不定休\n※営業時間・休業日は当店Xにて随時発信中です" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

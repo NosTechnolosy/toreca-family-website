@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="トレカfamilyの在庫確認・カード検索ページです。カード名、カテゴリ、レアリティから店頭在庫の目安を確認できます。">
+<title>在庫確認・カード検索｜トレカfamily</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail" data-bg-color="#F5F2EA">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#F5F2EA"/>
+    <rect x="360" y="300" width="200" height="150" rx="26" fill="#ffffff" stroke="#D8CFBB" stroke-width="6"/>
+    <circle cx="470" cy="375" r="34" fill="none" stroke="#2E75B6" stroke-width="14"/>
+    <line x1="496" y1="401" x2="540" y2="445" stroke="#2E75B6" stroke-width="16" stroke-linecap="round"/>
+    <text x="600" y="620" font-family="sans-serif" font-size="66" font-weight="900" fill="#142D4C" text-anchor="middle">在庫確認・カード検索</text>
+  </svg>
+</template>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@800;900&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#F5F2EA;font-family:"Zen Kaku Gothic New",system-ui,sans-serif;color:#27313F;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{display:block}
+  a{text-decoration:none;color:inherit;transition:box-shadow .28s ease, background-color .28s ease, border-color .28s ease, color .2s ease, transform .2s ease}
+  .tf-logo{display:inline-flex;align-items:baseline;color:#142D4C;line-height:1;white-space:nowrap}
+  .tf-logo .logo-ja{font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;letter-spacing:-.01em;transform:skewX(-4deg);transform-origin:bottom left}
+  .tf-logo .logo-en{font-family:"Fredoka","M PLUS Rounded 1c",sans-serif;font-weight:700;letter-spacing:-.005em;margin-left:.06em}
+  .tf-btn{transition:transform .25s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease, color .25s ease}
+  .tf-btn:hover{background:#1F4E79 !important;border-color:#1F4E79 !important;color:#ffffff !important;transform:translateY(-2px) scale(1.03) !important;box-shadow:0 12px 26px -8px rgba(31,78,121,.42) !important}
+  .tf-cat{transition:background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;cursor:pointer}
+  .tf-cat:hover{border-color:#9FC4E8 !important;color:#1F4E79 !important}
+  .tf-cat[data-active="1"]{background:#142D4C !important;border-color:#142D4C !important;color:#ffffff !important;box-shadow:0 10px 22px -10px rgba(20,45,76,.5)}
+  .tf-result{transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease}
+  .tf-result:hover{transform:translateY(-4px);box-shadow:0 22px 44px -22px rgba(20,45,76,.4) !important;border-color:#CADAEC !important}
+  .tf-field{font-family:inherit;font-size:15px;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:11px;padding:13px 15px;outline:none;transition:border-color .2s ease, box-shadow .2s ease}
+  .tf-field:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.14)}
+  @media (max-width:820px){
+    .tf-head{gap:12px !important;padding-left:18px !important;padding-right:18px !important}
+    .tf-head-right{gap:12px !important}
+    .tf-burger{display:flex !important}
+    .tf-nav{position:absolute !important;top:100% !important;left:0 !important;right:0 !important;flex-direction:column !important;align-items:stretch !important;gap:0 !important;background:#ffffff !important;padding:6px 20px 14px !important;box-shadow:0 14px 26px rgba(20,45,76,.14) !important;border-top:1px solid #ECECEC !important;display:none !important;font-size:16px !important;z-index:50}
+    .tf-nav.tf-nav-open{display:flex !important}
+    .tf-nav > a{padding:14px 4px !important;border-bottom:1px solid #F1ECDF}
+    .tf-sec{padding-left:20px !important;padding-right:20px !important}
+    .tf-searchgrid{grid-template-columns:1fr !important}
+    .tf-results{grid-template-columns:1fr 1fr !important;gap:16px !important}
+    h1{font-size:30px !important}
+  }
+  @media (max-width:560px){
+    .tf-results{grid-template-columns:1fr !important}
+  }
+</style>
+</helmet>
+
+<div style="background:#F5F2EA">
+
+  <!-- ===================== HEADER ===================== -->
+  <header style="position:sticky;top:0;z-index:40;background:#ffffff;border-bottom:1px solid #ECECEC">
+    <div class="tf-head" style="max-width:1560px;margin:0 auto;padding:22px 44px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <a href="index.html" class="tf-logo" style="font-size:32px;line-height:1"><span class="logo-ja">トレカ</span><span class="logo-en">family</span></a>
+      <div class="tf-head-right" style="display:flex;align-items:center;gap:24px">
+        <nav class="tf-nav" style="display:flex;align-items:center;gap:40px;font-size:16px;font-weight:700;color:#2A3646">
+          <a href="index.html#cards" style-hover="{{ navHover }}">取り扱いカード</a>
+          <a href="index.html#buy" style-hover="{{ navHover }}">買取</a>
+          <a href="#top" style="color:#2E75B6">在庫確認</a>
+          <a href="index.html#access" style-hover="{{ navHover }}">アクセス</a>
+          <a href="index.html#contact" style-hover="{{ navHover }}">お問い合わせ</a>
+        </nav>
+        <a class="tf-x" href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" aria-label="公式X（旧Twitter）" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#142D4C;flex:none" style-hover="{{ xHover }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
+        <button type="button" class="tf-burger" aria-label="メニュー" style="display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;border:1.5px solid #D8CFBB;border-radius:10px;background:#fff;cursor:pointer">
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+          <span style="display:block;width:18px;height:2px;background:#142D4C;margin:0 auto"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== TITLE BAND ===================== -->
+  <section id="top" style="position:relative;background:#F6F1E6">
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:56px 32px 30px">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;color:#9AAAC0;margin-bottom:14px">
+        <a href="index.html" style-hover="{{ navHover }}">TOP</a> &nbsp;/&nbsp; INVENTORY&nbsp;SEARCH
+      </div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:14px">INVENTORY / CARD SEARCH</div>
+      <h1 style="font-size:38px;line-height:1.35;font-weight:900;color:#142D4C;margin:0 0 14px">在庫確認・カード検索</h1>
+      <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0;max-width:600px">お探しのカードの在庫を、カテゴリ・キーワード・レアリティから確認できます。表示は店頭在庫の目安です。詳細やお取り置きはお気軽にお問い合わせください。</p>
+    </div>
+  </section>
+
+  <!-- ===================== SEARCH + RESULTS ===================== -->
+  <section style="position:relative;background:#F6F1E6">
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#F6F1E6"></path></svg>
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:64px 32px 96px">
+
+      <!-- search panel -->
+      <div style="background:#ffffff;border:1px solid #ECE3D0;border-radius:20px;padding:30px 30px 34px;box-shadow:0 22px 48px -30px rgba(20,45,76,.35)">
+        <div style="font-size:13px;font-weight:700;letter-spacing:.04em;color:#7E91A8;margin-bottom:14px">カテゴリ</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px">
+          <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+            <button type="button" class="tf-cat" data-active="{{ c.active }}" onClick="{{ c.onClick }}" style="font-size:14px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:999px;padding:10px 20px">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <div class="tf-searchgrid" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end">
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:#7E91A8">キーワード（カード名・型番）</span>
+            <input class="tf-field" type="text" placeholder="例：リザードン / ブルーアイズ / ルフィ" value="{{ keyword }}" onInput="{{ onKeyword }}">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:#7E91A8">レアリティ</span>
+            <select class="tf-field" onChange="{{ onRarity }}">
+              <sc-for list="{{ rarities }}" as="r" hint-placeholder-count="4">
+                <option value="{{ r }}">{{ r }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:#7E91A8">在庫</span>
+            <select class="tf-field" onChange="{{ onStock }}">
+              <sc-for list="{{ stockFilters }}" as="s" hint-placeholder-count="3">
+                <option value="{{ s }}">{{ s }}</option>
+              </sc-for>
+            </select>
+          </label>
+        </div>
+        <div style="display:flex;justify-content:center;margin-top:24px">
+          <button type="button" class="tf-btn" onClick="{{ onSearch }}" style="display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#fff;background:#1F4E79;border:1.5px solid #1F4E79;border-radius:11px;padding:15px 44px;cursor:pointer">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+            カードを検索
+          </button>
+        </div>
+      </div>
+
+      <!-- result count -->
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:38px 2px 20px">
+        <div style="font-size:15px;color:#48586C"><strong style="color:#142D4C;font-size:20px">{{ resultCount }}</strong> 件のカードが見つかりました</div>
+        <div style="font-size:13px;color:#9AAAC0">最終更新：2026/06/28</div>
+      </div>
+
+      <!-- results grid -->
+      <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+        <div class="tf-results" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+          <sc-for list="{{ results }}" as="card" hint-placeholder-count="6">
+            <div class="tf-result" style="background:#fff;border:1px solid #EAE0CC;border-radius:16px;overflow:hidden;box-shadow:0 14px 30px -22px rgba(20,45,76,.4);display:flex;flex-direction:column">
+              <div style="position:relative;aspect-ratio:5/4;background:{{ card.thumbBg }};display:flex;align-items:center;justify-content:center">
+                <div style="width:74px;height:100px;border-radius:10px;background:#ffffff;box-shadow:0 8px 18px -8px rgba(20,45,76,.4);display:flex;align-items:center;justify-content:center">
+                  <div style="width:44px;height:70px;border-radius:6px;border:2px solid {{ card.accent }}"></div>
+                </div>
+                <span style="position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:{{ card.accent }};border-radius:999px;padding:4px 11px">{{ card.game }}</span>
+                <span style="position:absolute;top:12px;right:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#142D4C;background:rgba(255,255,255,.92);border-radius:6px;padding:4px 9px">{{ card.rarity }}</span>
+              </div>
+              <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1">
+                <div style="font-size:16px;font-weight:700;color:#142D4C;line-height:1.4">{{ card.name }}</div>
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#9AAAC0;letter-spacing:.03em">{{ card.code }}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+                  <span style="font-size:20px;font-weight:900;color:#1F4E79;font-family:'Plus Jakarta Sans',sans-serif">{{ card.price }}</span>
+                  <span style="font-size:12px;font-weight:700;color:{{ card.stockColor }};background:{{ card.stockBg }};border-radius:999px;padding:5px 11px">{{ card.stockLabel }}</span>
+                </div>
+                <a href="index.html#contact" class="tf-btn" style="margin-top:12px;text-align:center;font-size:14px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:10px;padding:11px 12px">在庫を問い合わせる</a>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- empty state -->
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1.5px dashed #D8CFBB;border-radius:16px;padding:64px 32px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#5A6E86;margin-bottom:10px">該当するカードが見つかりませんでした</div>
+          <div style="font-size:14px;line-height:1.8;color:#93A4BA;max-width:440px;margin:0 auto">キーワードやレアリティの条件を変えてお試しください。お探しのカードは、お問い合わせいただければ在庫をお調べします。</div>
+        </div>
+      </sc-if>
+
+      <!-- note -->
+      <div style="margin-top:34px;font-size:12.5px;line-height:1.8;color:#93A4BA;text-align:center">※ 在庫・価格は店頭状況により変動します。最新情報は公式Xでも随時発信中です。</div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section id="contact" style="position:relative;background:#F6F1E6">
+    <svg viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:-49px;left:0;width:100%;height:50px;display:block;pointer-events:none"><path d="M0,50 V28 Q360,6 720,28 T1440,28 V50 Z" fill="#F6F1E6"></path></svg>
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:90px 32px;display:flex;justify-content:center">
+      <div style="background:#ffffff;border:1px solid #ECE3D0;border-radius:22px;padding:54px 56px;max-width:680px;width:100%;text-align:center;box-shadow:0 30px 60px -34px rgba(20,45,76,.32)">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:14px">CONTACT</div>
+        <h2 style="font-size:28px;line-height:1.4;font-weight:900;color:#142D4C;margin:0 0 14px">お探しのカードが見つからない時は</h2>
+        <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0 auto 30px;max-width:480px">在庫にないカードや、お取り置き・入荷のご相談も承ります。公式Xからお気軽にお問い合わせください。</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+          <a href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" class="tf-btn" style="font-size:16px;font-weight:700;color:#fff;background:#1F4E79;border:1.5px solid #1F4E79;border-radius:11px;padding:16px 34px">公式Xで問い合わせる</a>
+          <a href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" class="tf-btn" style="font-size:16px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:11px;padding:16px 32px">公式Xを見る</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer style="position:relative;background:#ffffff;border-top:1px solid #EFE8D9">
+    <div class="tf-sec" style="max-width:1200px;margin:0 auto;padding:56px 32px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+          <img src="assets/logo.avif" alt="トレカfamily" style="width:46px;height:46px;object-fit:contain">
+          <span style="display:flex;flex-direction:column;line-height:1.15">
+            <span style="font-weight:700;font-size:18px;color:#142D4C">トレカfamily</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;color:#7E91A8">TRADING CARD SHOP</span>
+          </span>
+        </div>
+        <p style="font-size:14px;line-height:1.85;color:#6B7B90;margin:0;max-width:280px">神戸・三ノ宮のトレーディングカード専門店。家族とプレイヤーが安心して通えるお店です。</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#9AAAC0;margin-bottom:16px">サービス</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#48586C">
+          <a href="index.html#cards" style-hover="{{ navHover }}">取り扱いカード</a>
+          <a href="index.html#buy" style-hover="{{ navHover }}">買取</a>
+          <a href="#top" style-hover="{{ navHover }}">在庫確認・カード検索</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#9AAAC0;margin-bottom:16px">店舗情報</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#48586C">
+          <a href="index.html#access" style-hover="{{ navHover }}">アクセス・店舗案内</a>
+          <a href="index.html#contact" style-hover="{{ navHover }}">お問い合わせ</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#9AAAC0;margin-bottom:16px">OTHER</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#48586C">
+          <a href="https://x.com/TCG_family_?s=20" target="_blank" rel="noopener" style-hover="{{ navHover }}">公式X</a>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:0 auto;padding:18px 32px 0;border-top:1px solid #E7DEC9">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#9AAAC0">© 2026 トレカfamily ・ KOBE SANNOMIYA</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { cat: "すべて", keyword: "", rarity: "すべて", stock: "すべて" };
+
+  componentDidMount() {
+    const burger = document.querySelector(".tf-burger");
+    const nav = document.querySelector(".tf-nav");
+    if (burger && nav) burger.addEventListener("click", () => nav.classList.toggle("tf-nav-open"));
+  }
+
+  _cards() {
+    const P = (n) => "¥" + n.toLocaleString();
+    return [
+      { name: "リザードン ex SAR", game: "ポケモンカード", rarity: "SAR", code: "SV3a 201/190", price: 42000, stock: "在庫あり" },
+      { name: "ミュウツー ex SR", game: "ポケモンカード", rarity: "SR", code: "SV5M 084/071", price: 3800, stock: "残りわずか" },
+      { name: "ピカチュウ AR", game: "ポケモンカード", rarity: "AR", code: "SV4a 232/190", price: 950, stock: "在庫あり" },
+      { name: "ナンジャモ SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4M 091/066", price: 28000, stock: "在庫なし" },
+      { name: "青眼の白龍 QCSE", game: "遊戯王", rarity: "QCSE", code: "QCCU-JP001", price: 6800, stock: "在庫あり" },
+      { name: "ブラック・マジシャン 25th", game: "遊戯王", rarity: "25th", code: "QCCP-JP001", price: 4200, stock: "残りわずか" },
+      { name: "灰流うらら プリシク", game: "遊戯王", rarity: "20th", code: "20TH-JPC02", price: 15800, stock: "在庫あり" },
+      { name: "モンキー・D・ルフィ SEC", game: "ワンピースカード", rarity: "SEC", code: "OP01-120", price: 9800, stock: "在庫あり" },
+      { name: "シャンクス SR パラレル", game: "ワンピースカード", rarity: "SR-P", code: "OP01-120", price: 5600, stock: "残りわずか" },
+      { name: "ヤマト SR", game: "ワンピースカード", rarity: "SR", code: "OP04-112", price: 1400, stock: "在庫あり" },
+      { name: "エース SR パラレル", game: "ワンピースカード", rarity: "SR-P", code: "OP02-013", price: 3200, stock: "在庫なし" },
+      { name: "ミモザ SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4a 349/190", price: 19800, stock: "在庫あり" },
+    ].map((c) => ({ ...c, priceText: P(c.price) }));
+  }
+
+  _gameColor(game) {
+    if (game === "ポケモンカード") return "#2E75B6";
+    if (game === "遊戯王") return "#1F4E79";
+    return "#5B7FA6";
+  }
+  _thumbBg(game) {
+    if (game === "ポケモンカード") return "#EAF1F8";
+    if (game === "遊戯王") return "#E7ECF3";
+    return "#EEF1F6";
+  }
+  _stockStyle(stock) {
+    if (stock === "在庫あり") return { color: "#1F6B45", bg: "#E4F1EA" };
+    if (stock === "残りわずか") return { color: "#A9702A", bg: "#F6ECDC" };
+    return { color: "#9AAAC0", bg: "#EEF0F3" };
+  }
+
+  renderVals() {
+    const navHover = { color: "#2E75B6" };
+    const xHover = { color: "#2E75B6", transform: "translateY(-2px)" };
+
+    const cats = ["すべて", "ポケモンカード", "遊戯王", "ワンピースカード"];
+    const rarities = ["すべて", "SAR", "SR", "SR-P", "AR", "SEC", "QCSE", "25th", "20th"];
+    const stockFilters = ["すべて", "在庫あり", "残りわずか"];
+
+    const { cat, keyword, rarity, stock } = this.state;
+    const kw = (keyword || "").trim().toLowerCase();
+
+    const results = this._cards().filter((c) => {
+      if (cat !== "すべて" && c.game !== cat) return false;
+      if (rarity !== "すべて" && c.rarity !== rarity) return false;
+      if (stock !== "すべて" && c.stock !== stock) return false;
+      if (kw && !(c.name.toLowerCase().includes(kw) || c.code.toLowerCase().includes(kw))) return false;
+      return true;
+    }).map((c) => {
+      const ss = this._stockStyle(c.stock);
+      return {
+        name: c.name, game: c.game, rarity: c.rarity, code: c.code, price: c.priceText,
+        accent: this._gameColor(c.game), thumbBg: this._thumbBg(c.game),
+        stockLabel: c.stock, stockColor: ss.color, stockBg: ss.bg,
+      };
+    });
+
+    const categories = cats.map((label) => ({
+      label,
+      active: this.state.cat === label ? "1" : "0",
+      onClick: () => this.setState({ cat: label }),
+    }));
+
+    return {
+      navHover, xHover,
+      categories, rarities, stockFilters,
+      keyword: this.state.keyword,
+      onKeyword: (e) => this.setState({ keyword: e.target.value }),
+      onRarity: (e) => this.setState({ rarity: e.target.value }),
+      onStock: (e) => this.setState({ stock: e.target.value }),
+      onSearch: () => this.forceUpdate(),
+      results,
+      resultCount: results.length,
+      hasResults: results.length > 0,
+      noResults: results.length === 0,
+    };
+  }
+}
+</script>
+</body>
+</html>
