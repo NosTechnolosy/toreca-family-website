@@ -15,6 +15,8 @@ docs/
 
 GitHub Pagesの公開元は `main` ブランチの `/docs` です。デザイン引き渡しファイルやローカル作業用ファイルは `.gitignore` で公開対象から除外しています。
 
+現在は共有URLを知る方向けの確認期間として、各HTMLに `noindex` を設定し、検索エンジンへの掲載を抑止しています。これはパスワード保護ではないため、URLを知る方は閲覧できます。
+
 ## 初回公開手順
 
 1. GitHubでリポジトリを作成します。
@@ -31,6 +33,12 @@ GitHub Pagesの公開元は `main` ブランチの `/docs` です。デザイン
 3. 変更内容をコミットし、`main` ブランチへPushします。
 4. GitHub Pagesのデプロイ完了後、公開URLで再確認します。
 
+## 検索掲載を開始する手順
+
+1. `docs/index.html` と `docs/inventory.html` から `<meta name="robots" content="noindex, nofollow, noarchive">` を削除します。
+2. 変更をコミットして `main` ブランチへPushします。
+3. デプロイ後、必要に応じてGoogle Search Consoleからインデックス登録をリクエストします。
+
 ## ローカル確認
 
 リポジトリ直下で任意の静的HTTPサーバーを起動し、`docs/` を公開ルートに指定します。HTMLファイルを直接開くのではなく、HTTP経由で確認してください。
@@ -42,4 +50,3 @@ GitHub Pagesの公開元は `main` ブランチの `/docs` です。デザイン
 - 独自ドメイン導入時はGitHub Pagesのカスタムドメイン設定とDNSを利用できます。
 - エックスサーバー等へ移行する場合も、`docs/` の静的ファイルを公開ディレクトリへ配置できる構成です。
 - 認証情報、Personal Access Token、APIキー、`.env` はコミットしません。
-
