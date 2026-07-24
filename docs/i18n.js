@@ -211,8 +211,16 @@
     });
   }
 
+  function updateLocalizedImages() {
+    document.querySelectorAll("[data-src-ja][data-src-en]").forEach((image) => {
+      const nextSource = language === "en" ? image.dataset.srcEn : image.dataset.srcJa;
+      if (image.getAttribute("src") !== nextSource) image.setAttribute("src", nextSource);
+    });
+  }
+
   function applyLanguage() {
     document.documentElement.lang = language;
+    updateLocalizedImages();
     translateTree(document.body);
     updateMetadata();
     updateButtons();
@@ -241,6 +249,7 @@
         if (mutation.type === "attributes") translateAttributes(mutation.target);
         mutation.addedNodes.forEach(translateTree);
       });
+      updateLocalizedImages();
       updateButtons();
     });
     observer.observe(document.body, {
