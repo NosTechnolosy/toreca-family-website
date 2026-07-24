@@ -33,16 +33,22 @@ const formatBytes = (bytes: number) => {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 };
 
-const formatDateTime = (value?: string) =>
-  value
-    ? new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-      }).format(new Date(value))
-    : "—";
+const formatDateTime = (value?: string) => {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  try {
+    return new Intl.DateTimeFormat("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(date);
+  } catch {
+    return value;
+  }
+};
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("inventory");
@@ -161,13 +167,13 @@ export default function App() {
     setBusy(true);
     setProgress("買取表を送信しています…");
     try {
-      setResult(
-        await invoke<UpdateResult>("update_buyback", {
-          path: image.path,
-          displayDate,
-          alt: alt.trim()
-        })
-      );
+      const nextResult = await invoke<UpdateResult>("update_buyback", {
+        path: image.path,
+        displayDate,
+        alt: alt.trim()
+      });
+      setImage(null);
+      setResult(nextResult);
     } catch (reason) {
       setError(String(reason));
     } finally {
