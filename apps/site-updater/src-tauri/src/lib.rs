@@ -363,6 +363,15 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
+    use std::net::TcpListener;
+
+    fn unused_local_url() -> String {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        drop(listener);
+        format!("http://{address}")
+    }
 
     #[test]
     fn validates_supported_buyback_image_and_creates_preview() {
@@ -385,5 +394,33 @@ mod tests {
         let oversized = directory.path().join("oversized.png");
         std::fs::write(&oversized, vec![0_u8; (MAX_IMAGE_BYTES + 1) as usize]).unwrap();
         assert!(inspect_buyback_image(oversized.to_string_lossy().into_owned()).is_err());
+    }
+
+    #[test]
+    fn reports_communication_failure_without_claiming_success() {
+        let result: Result<UpdateResult, String> = tauri::async_runtime::block_on(post_json(
+            &unused_local_url(),
+            "test-key",
+            &json!({}),
+            Duration::from_secs(2),
+        ));
+        let error = result.unwrap_err();
+        assert!(
+            error.contains("更新サービスへ接続できませんでした")
+                || error.contains("更新処理がタイムアウトしました"),
+            "unexpected communication error: {error}"
+        );
+    }
+
+    #[test]
+    fn maps_authentication_and_conflict_errors_for_staff() {
+        assert_eq!(
+            http_error_message(StatusCode::UNAUTHORIZED),
+            "接続キーが正しくありません。接続設定を確認してください。"
+        );
+        assert_eq!(
+            http_error_message(StatusCode::CONFLICT),
+            "別の更新と重なりました。最新の状態を確認して、もう一度お試しください。"
+        );
     }
 }

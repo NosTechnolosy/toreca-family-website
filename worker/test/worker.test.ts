@@ -61,6 +61,42 @@ describe("update worker", () => {
     expect(response.status).toBe(401);
   });
 
+  it("rejects an unapproved application origin before authentication", async () => {
+    const blocked = request();
+    blocked.headers.set("Origin", "https://example.com");
+    const response = await worker.fetch(blocked, env);
+    expect(response.status).toBe(403);
+  });
+
+  it("rejects updates when the rate limit is reached", async () => {
+    const limitedEnv: Env = {
+      ...env,
+      UPDATES_RATE_LIMITER: {
+        limit: vi.fn().mockResolvedValue({ success: false })
+      }
+    };
+    const response = await worker.fetch(request(), limitedEnv);
+    expect(response.status).toBe(429);
+  });
+
+  it("rejects malformed JSON without contacting GitHub", async () => {
+    const github = vi.spyOn(globalThis, "fetch");
+    const response = await worker.fetch(
+      new Request("https://worker.example/api/inventory/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "tauri://localhost",
+          "X-App-Key": env.APP_API_KEY
+        },
+        body: "{"
+      }),
+      env
+    );
+    expect(response.status).toBe(400);
+    expect(github).not.toHaveBeenCalled();
+  });
+
   it("rejects a chunked body that exceeds the inventory limit", async () => {
     const oversized = new Request("https://worker.example/api/inventory/update", {
       method: "POST",

@@ -124,7 +124,7 @@ apps/site-updater/src-tauri/target/release/bundle/msi/
 apps/site-updater/src-tauri/target/release/bundle/nsis/
 ```
 
-MSIまたはNSISのセットアップファイルを店舗PCへ渡してください。署名証明書を導入するまでは、Windowsが発行元確認を表示する場合があります。
+店舗PCへの正式配布は、生成後も安定して保持されるMSI版を推奨します。NSIS版は環境によってWindowsの保護機能により隔離される場合があります。その場合は保護機能を無効化せず、MSI版を使用してください。コード署名証明書を導入するまでは、Windowsが発行元確認を表示する場合があります。
 
 ## ローカルのモックAPIで確認
 
