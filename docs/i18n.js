@@ -95,6 +95,7 @@
     "在庫にないカードや、お取り置き・入荷のご相談も承ります。公式Xからお気軽にお問い合わせください。": "Contact us on X about unavailable cards, holds, or upcoming arrivals.",
     "公式X": "Official X",
     "プライバシーポリシー": "Privacy Policy",
+    "特定商取引法に基づく表記": "Legal Notice",
     "在庫あり": "In stock"
   };
   const reverseTranslations = Object.fromEntries(
