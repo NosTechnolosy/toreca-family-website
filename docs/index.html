@@ -126,6 +126,26 @@
     .tf-hero-copy{font-size:23px !important}
     .tf-foot-grid{grid-template-columns:1fr !important}
   }
+  @media (max-height:560px) and (orientation:landscape) and (max-width:960px){
+    .tf-hero-row > div:first-child{
+      flex:0 0 48px !important;
+      width:48px !important;
+      min-width:48px !important;
+      padding:6px 10px 0 0 !important;
+      overflow:visible !important;
+      position:relative !important;
+      z-index:2 !important;
+    }
+    .tf-hero-copy{
+      font-size:21px !important;
+      line-height:1.45 !important;
+      letter-spacing:.04em !important;
+      white-space:nowrap !important;
+      inline-size:max-content !important;
+      max-inline-size:none !important;
+      overflow:visible !important;
+    }
+  }
 </style>
 </helmet>
 
