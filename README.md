@@ -149,9 +149,9 @@ pnpm tauri:dev
 
 モックAPIはGitHubや公開サイトを変更せず、受信内容の検証と成功応答だけを行います。
 
-## Cloudflare Workerのテスト環境
+## Cloudflare Workerの設定
 
-最初から `main` を設定しないでください。GitHubで `test/site-updater` ブランチを作り、まずテストブランチだけを更新します。
+初回導入時はGitHubで `test/site-updater` ブランチを作り、テストブランチで動作確認してから `main` へ切り替えます。現在の設定は確認済みのため、本番の `main` ブランチを更新します。
 
 ### 1. GitHubトークン
 
@@ -171,7 +171,7 @@ Cloudflare DashboardのWorker設定で登録します。
 ```text
 GITHUB_OWNER=nostechnolosy
 GITHUB_REPO=toreca-family-website
-GITHUB_BRANCH=test/site-updater
+GITHUB_BRANCH=main
 ALLOWED_ORIGIN=tauri://localhost,http://tauri.localhost,https://tauri.localhost
 ```
 
@@ -210,7 +210,7 @@ Invoke-RestMethod https://＜WorkerのURL＞/api/health
 6. 管理者がWorkerの `GITHUB_BRANCH` を `main` へ変更します。
 7. Workerを再デプロイし、少量の管理されたデータで最終確認します。
 
-このリポジトリの初期設定はテストブランチを前提にしています。人間の確認なしに本番ブランチへ切り替えないでください。
+本番公開後は `main` が更新対象です。新機能の検証時は再び `test/site-updater` などのテストブランチへ切り替え、人間の確認後に本番へ戻してください。
 
 ## GitHub Pages
 

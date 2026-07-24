@@ -10,7 +10,7 @@
   "vars": {
     "GITHUB_OWNER": "NosTechnolosy",
     "GITHUB_REPO": "toreca-family-website",
-    "GITHUB_BRANCH": "test/site-updater",
+    "GITHUB_BRANCH": "main",
     "ALLOWED_ORIGIN": "tauri://localhost,http://tauri.localhost,https://tauri.localhost"
   },
   "ratelimits": [
