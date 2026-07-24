@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="description" content="トレカfamilyの特定商取引法に基づく表記です。事業者情報、販売価格、支払方法、発送時期、返品条件をご案内します。">
   <title>特定商取引法に基づく表記｜トレカfamily</title>
+  <script src="./i18n.js?v=20260724-4" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
@@ -19,6 +20,7 @@
     .logo{display:inline-flex;align-items:baseline;white-space:nowrap;color:#142D4C;line-height:1}
     .logo-ja{font-family:"M PLUS Rounded 1c","Zen Kaku Gothic New",sans-serif;font-size:28px;font-weight:900;letter-spacing:-.07em}
     .logo-en{font-family:"Fredoka",sans-serif;font-size:23px;font-weight:700;color:#2E75B6;margin-left:6px;letter-spacing:-.02em}
+    .header-actions{display:flex;align-items:center;gap:20px}
     .nav{display:flex;align-items:center;gap:28px;font-size:14px;font-weight:700;color:#2A3646}
     .nav a,.footer-links a{transition:color .2s ease}
     .nav a:hover,.footer-links a:hover{color:#2E75B6}
@@ -61,13 +63,16 @@
       <a href="index.html#top" class="logo" aria-label="トレカfamily トップページ">
         <span class="logo-ja">トレカ</span><span class="logo-en">family</span>
       </a>
-      <nav class="nav" aria-label="メインナビゲーション">
-        <a href="index.html#cards">取り扱いカード</a>
-        <a href="index.html#buy">買取</a>
-        <a href="inventory.html">在庫確認</a>
-        <a href="index.html#access">アクセス</a>
-        <a href="index.html#contact">お問い合わせ</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="nav" aria-label="メインナビゲーション">
+          <a href="index.html#cards">取り扱いカード</a>
+          <a href="index.html#buy">買取</a>
+          <a href="inventory.html">在庫確認</a>
+          <a href="index.html#access">アクセス</a>
+          <a href="index.html#contact">お問い合わせ</a>
+        </nav>
+        <button type="button" data-language-toggle class="tf-lang-toggle" aria-label="英語に切り替え" aria-pressed="false" title="英語に切り替え" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:32px;padding:0;border:1.5px solid #CADAEC;border-radius:9px;background:#fff;color:#1F4E79;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;cursor:pointer;flex:none">EN</button>
+      </div>
     </div>
   </header>
 

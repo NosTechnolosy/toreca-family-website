@@ -94,8 +94,90 @@
     "お探しのカードが見つからない時は": "Can't find the card you need?",
     "在庫にないカードや、お取り置き・入荷のご相談も承ります。公式Xからお気軽にお問い合わせください。": "Contact us on X about unavailable cards, holds, or upcoming arrivals.",
     "公式X": "Official X",
+    "トップページ": "Home",
+    "メインナビゲーション": "Main navigation",
+    "トレカfamily トップページ": "Toreca family home page",
     "プライバシーポリシー": "Privacy Policy",
-    "特定商取引法に基づく表記": "Legal Notice",
+    "当ショップは、お客様の個人情報保護の重要性について認識し、個人情報の保護に関する法律（以下「個人情報保護法」といいます。）を遵守すると共に、以下のプライバシーポリシー（以下「本プライバシーポリシー」といいます。）に従い、適切な取扱い及び保護に努めます。": "We recognize the importance of protecting our customers' personal information. We comply with Japan's Act on the Protection of Personal Information (the “APPI”) and handle and protect personal information appropriately in accordance with this Privacy Policy.",
+    "1. 個人情報の定義": "1. Definition of Personal Information",
+    "本プライバシーポリシーにおいて、個人情報とは、個人情報保護法第2条第1項により定義された個人情報、すなわち、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日その他の記述等により特定の個人を識別することができるもの（他の情報と容易に照合することができ、それにより特定の個人を識別することができることとなるものを含みます。）、もしくは個人識別符号が含まれる情報を意味するものとします。": "In this Privacy Policy, “personal information” means personal information as defined in Article 2, Paragraph 1 of the APPI: information relating to a living individual that can identify a specific individual by name, date of birth, or other descriptions contained in the information (including information that can be readily cross-referenced with other information to identify a specific individual), or information containing an individual identification code.",
+    "2. 個人情報の利用目的": "2. Purposes of Use",
+    "当ショップは、お客様の個人情報を、以下の目的で利用致します。": "We use customers' personal information for the following purposes:",
+    "（１） 当ショップサービスの提供のため": "(1) To provide our shop's services.",
+    "（２） 当ショップサービスに関するご案内、お問い合わせ等への対応のため": "(2) To provide information about our services and respond to inquiries.",
+    "（３） 当ショップの商品、サービス等のご案内のため": "(3) To provide information about our products and services.",
+    "（４） 当ショップサービスに関する当ショップの規約、ポリシー等（以下「規約等」といいます。）に違反する行為に対する対応のため": "(4) To respond to conduct that violates the terms, policies, or other rules governing our services.",
+    "（５） 当ショップサービスに関する規約等の変更などを通知するため": "(5) To notify customers of changes to the terms and policies governing our services.",
+    "（６） 当ショップサービスの改善、新サービスの開発等に役立てるため": "(6) To improve our services and develop new services.",
+    "（７） 当ショップサービスに関連して、個別を識別できない形式に加工した統計データを作成するため": "(7) To create statistical data related to our services in a form that does not identify individuals.",
+    "（８） その他、上記利用目的に付随する目的のため": "(8) For other purposes incidental to those listed above.",
+    "3. 個人情報利用目的の変更": "3. Changes to the Purposes of Use",
+    "当ショップは、個人情報の利用目的を、関連性を有すると合理的に認められる範囲内において変更することがあり、変更した場合にはお客様に通知又は公表します。": "We may change the purposes for which personal information is used within a scope reasonably considered relevant to the original purposes. Any changes will be communicated to customers or publicly announced.",
+    "4. 個人情報利用の制限": "4. Restrictions on Use",
+    "当ショップは、個人情報保護法その他の法令により許容される場合を除き、お客様の同意を得ず、利用目的の達成に必要な範囲を超えて個人情報を取り扱いません。但し、次の場合はこの限りではありません。": "Except where permitted by the APPI or other applicable laws, we will not handle personal information beyond the scope necessary to achieve the stated purposes without the customer's consent. This restriction does not apply in the following cases:",
+    "（１） 法令に基づく場合": "(1) When required by law.",
+    "（２） 人の生命、身体又は財産の保護のために必要がある場合であって、お客様の同意を得ることが困難であるとき": "(2) When necessary to protect a person's life, body, or property and obtaining the customer's consent is difficult.",
+    "（３） 公衆衛生の向上又は児童の健全な育成の推進のために特に必要がある場合であって、お客様の同意を得ることが困難であるとき": "(3) When particularly necessary to improve public health or promote the sound development of children and obtaining the customer's consent is difficult.",
+    "（４） 国の機関もしくは地方公共団体又はその委託を受けた者が法令の定める事務を遂行することに対して協力する必要がある場合であって、お客様の同意を得ることにより当該事務の遂行に支障を及ぼすおそれがあるとき": "(4) When cooperation is required for a national or local government body, or a party entrusted by one, to perform duties prescribed by law, and obtaining the customer's consent could interfere with those duties.",
+    "5. 個人情報の適正な取得": "5. Proper Acquisition of Personal Information",
+    "当ショップは、適正に個人情報を取得し、偽りその他不正の手段により取得しません。": "We acquire personal information through proper means and do not obtain it through deception or other improper methods.",
+    "6. 個人情報の安全管理": "6. Security Management",
+    "当ショップは、個人情報の紛失、破壊、改ざん及び漏洩などのリスクに対して、個人情報の安全管理が図られるよう、当ショップの従業員に対し、必要かつ適切な監督を行います。また、当ショップは、個人情報の取扱いの全部又は一部を委託する場合は、委託先において個人情報の安全管理が図られるよう、必要かつ適切な監督を行います。": "We provide necessary and appropriate supervision to our employees to safeguard personal information against risks such as loss, destruction, alteration, and leakage. When all or part of the handling of personal information is outsourced, we also provide necessary and appropriate supervision of the service provider.",
+    "7. 第三者提供": "7. Provision to Third Parties",
+    "当ショップは、個人情報保護法その他の法令に基づき開示が認められる場合を除くほか、あらかじめお客様の同意を得ないで、個人情報を第三者に提供しません。但し、次に掲げる場合は上記に定める第三者への提供には該当しません。": "We will not provide personal information to third parties without the customer's prior consent, except where disclosure is permitted under the APPI or other applicable laws. The following cases are not considered provision to a third party:",
+    "（１） 当ショップが利用目的の達成に必要な範囲内において個人情報の取扱いの全部又は一部を委託することに伴って個人情報を提供する場合": "(1) When personal information is provided to a service provider entrusted with all or part of its handling within the scope necessary to achieve the purposes of use.",
+    "（２） 合併その他の事由による事業の承継に伴って個人情報が提供される場合": "(2) When personal information is transferred as part of a business succession resulting from a merger or other reason.",
+    "（３） 個人情報保護法の定めに基づき共同利用する場合": "(3) When personal information is jointly used in accordance with the APPI.",
+    "8. 個人情報の開示": "8. Disclosure of Personal Information",
+    "当ショップは、お客様から、個人情報保護法の定めに基づき個人情報の開示を求められたときは、お客様ご本人からのご請求であることを確認の上で、お客様に対し、遅滞なく開示を行います（当該個人情報が存在しないときにはその旨を通知いたします。）。但し、個人情報保護法その他の法令により、当ショップが開示の義務を負わない場合は、この限りではありません。": "When a customer requests disclosure of personal information under the APPI, we will confirm that the request is from the customer and disclose the information without delay. If no such information exists, we will notify the customer. This does not apply where we are not obligated to disclose the information under the APPI or other applicable laws.",
+    "9. 個人情報の訂正等": "9. Correction of Personal Information",
+    "当ショップは、お客様から、個人情報が真実でないという理由によって、個人情報保護法の定めに基づきその内容の訂正、追加又は削除（以下「訂正等」といいます。）を求められた場合には、お客様ご本人からのご請求であることを確認の上で、利用目的の達成に必要な範囲内において、遅滞なく必要な調査を行い、その結果に基づき、個人情報の内容の訂正等を行い、その旨をお客様に通知します（訂正等を行わない旨の決定をしたときは、お客様に対しその旨を通知いたします。）。但し、個人情報保護法その他の法令により、当ショップが訂正等の義務を負わない場合は、この限りではありません。": "If a customer requests correction, addition, or deletion of personal information under the APPI on the grounds that it is inaccurate, we will confirm that the request is from the customer, conduct the necessary investigation without delay within the scope required to achieve the purposes of use, and make any appropriate correction based on the results. We will notify the customer whether or not a correction is made. This does not apply where we are not obligated to make such a correction under the APPI or other applicable laws.",
+    "10. 個人情報の利用停止等": "10. Suspension of Use",
+    "当ショップは、お客様から、お客様の個人情報が、あらかじめ公表された利用目的の範囲を超えて取り扱われているという理由又は偽りその他不正の手段により取得されたものであるという理由により、個人情報保護法の定めに基づきその利用の停止又は消去（以下「利用停止等」といいます。）を求められた場合において、そのご請求に理由があることが判明した場合には、お客様ご本人からのご請求であることを確認の上で、遅滞なく個人情報の利用停止等を行い、その旨をお客様に通知します。但し、個人情報保護法その他の法令により、当ショップが利用停止等の義務を負わない場合は、この限りではありません。": "If a customer requests suspension of use or deletion of personal information under the APPI because it has been handled beyond the previously published purposes or acquired through deception or other improper means, and the request is found to be justified, we will confirm that the request is from the customer, suspend use or delete the information without delay, and notify the customer. This does not apply where we are not obligated to do so under the APPI or other applicable laws.",
+    "11. Cookie（クッキー）その他の技術の利用": "11. Use of Cookies and Similar Technologies",
+    "（１） 当ショップのサービスは、Cookie及びこれに類する技術を利用することがあります。これらの技術は、当ショップによる当ショップのサービスの利用状況等の把握に役立ち、サービス向上に資するものです。Cookieを無効化されたいユーザーは、ウェブブラウザの設定を変更することによりCookieを無効化することができます。但し、Cookieを無効化すると、当ショップのサービスの一部の機能をご利用いただけなくなる場合があります。": "(1) Our services may use cookies and similar technologies. These technologies help us understand how our services are used and improve them. Users may disable cookies by changing their web browser settings; however, doing so may prevent some features of our services from functioning.",
+    "（２） 当ショップは、当ショップサービスが提供するサービスの利用状況等を調査・分析するため、本サービス上に Google LLCが提供する Google アナリティクスを利用しています。Googleアナリティクスでデータが収集、処理される仕組みその他Googleアナリティクスの詳しい情報につきましては、同社のサイトをご覧ください。": "(2) We use Google Analytics, provided by Google LLC, to investigate and analyze the use of our services. Please refer to Google's website for information about how Google Analytics collects and processes data.",
+    "Google アナリティクス 利用規約：": "Google Analytics Terms of Service:",
+    "お客様が Google パートナーのサイトやアプリを使用する際の Google によるデータ使用：": "How Google uses data when you use sites or apps of Google partners:",
+    "Google プライバシーポリシー：": "Google Privacy Policy:",
+    "なお、お客様はご自身のデータが Google アナリティクスで使用されることを望まない場合は、Google 社の提供する Google アナリティクス オプトアウト アドオンをご利用ください。": "If you do not want your data to be used by Google Analytics, you may use the Google Analytics Opt-out Browser Add-on provided by Google.",
+    "Google アナリティクス オプトアウト アドオン：": "Google Analytics Opt-out Browser Add-on:",
+    "（３） 本サービスでは「Google Analyticsの広告向けの機能」を有効にしており、下記の機能を利用し、広告やサイト改善のためDoubleClick CookieなどのサードパーティCookieを利用しています。": "(3) This service enables Google Analytics Advertising Features and uses third-party cookies, including DoubleClick cookies, for advertising and site improvement through the features below.",
+    "Google Analyticsリマーケティング": "Google Analytics Remarketing",
+    "Google Analyticsのユーザー属性レポートとユーザー属性レポートとインタレスト レポート": "Google Analytics Demographics and Interests Reports",
+    "これにより、本サービスではGoogle AnalyticsのCookieを利用して、お客様の年齢・性別・閲覧履歴・本サービスに関する関心の傾向をおおよそ把握するための分析が可能となっております。": "These Google Analytics cookies allow us to analyze general trends relating to customers' age, gender, browsing history, and interests in this service.",
+    "「Google Analyticsの広告向けの機能」を使用されることを望まない場合は、設定によってトラッキングを無効にすることが可能です。Google Analytics オプトアウト アドオンをブラウザにインストールされると無効にすることができます。": "If you do not want Google Analytics Advertising Features to be used, you can disable tracking through your settings or by installing the Google Analytics Opt-out Browser Add-on.",
+    "12. お問い合わせ": "12. Contact",
+    "開示等のお申出、ご意見、ご質問、苦情のお申出その他個人情報の取扱いに関するお問い合わせは、当ショップの「特定商取引法に基づく表記」内にある連絡先へご連絡いただくか、ショップページ内のお問い合わせフォームよりお問い合わせください。": "For requests for disclosure, comments, questions, complaints, or other inquiries concerning the handling of personal information, please use the contact information provided in our Legal Notice or the inquiry form on the shop page.",
+    "13. 継続的改善": "13. Continuous Improvement",
+    "当ショップは、個人情報の取扱いに関する運用状況を適宜見直し、継続的な改善に努めるものとし、必要に応じて、本プライバシーポリシーを変更することがあります。": "We periodically review our practices for handling personal information and work toward continuous improvement. We may revise this Privacy Policy when necessary.",
+    "特定商取引法に基づく表記": "Legal Notice under the Act on Specified Commercial Transactions",
+    "事業者の名称": "Business Name",
+    "事業者の所在地": "Business Address",
+    "〒6500021": "650-0021",
+    "兵庫県神戸市中央区三宮町1-9-1センタープラザ2F229": "Center Plaza 2F, Room 229, 1-9-1 Sannomiya-cho, Chuo-ku, Kobe, Hyogo, Japan",
+    "営業時間・ショップ情報など": "Business Hours and Shop Information",
+    "古物商許可証（道具商）": "Secondhand Dealer License (Tools and Equipment)",
+    "兵庫県公安委員会許可第631132400054": "Hyogo Prefectural Public Safety Commission License No. 631132400054",
+    "中安 幸輝": "Koki Nakayasu",
+    "お問い合わせ対応時間：14時〜20時": "Inquiry hours: 2:00 PM–8:00 PM",
+    "定休日：不定休": "Closed on irregular days",
+    "販売価格": "Selling Prices",
+    "販売価格は、税込み表記となっております。": "All listed prices include consumption tax.",
+    "また、別途配送料が掛かる場合もございます。配送料に関しては商品詳細ページをご確認ください。": "Additional shipping charges may apply. Please see the product details page for shipping costs.",
+    "代金の支払方法・時期": "Payment Methods and Timing",
+    "支払方法：クレジットカードによる決済がご利用いただけます。": "Payment method: Credit card payments are accepted.",
+    "支払時期：商品注文確定時にお支払いが確定いたします。": "Payment timing: Payment is finalized when the order is confirmed.",
+    "PAY ID あと払い:": "PAY ID Pay Later:",
+    "・ コンビニ：ご請求後翌月10日のお支払い：支払い手数料：350円（税込）": "• Convenience store: Payment is due by the 10th of the month following billing. Fee: ¥350 (tax included).",
+    "・ 口座振替：ご請求後指定口座より引き落とし：支払い手数料：無料": "• Direct debit: Debited from the designated bank account after billing. Fee: Free.",
+    "銀行振込決済（ご請求後5営業日以内のお支払い）：": "Bank transfer (payment within five business days after billing):",
+    "・ 支払い手数料：360円（税込）": "• Fee: ¥360 (tax included).",
+    "商品のお届け時期": "Delivery Time",
+    "代金のお支払い確定後、3営業日以内に発送いたします。": "Orders will be shipped within three business days after payment is confirmed.",
+    "後払い決済の場合は注文確定後、3営業日以内に発送いたします。": "For pay-later transactions, orders will be shipped within three business days after order confirmation.",
+    "返品について": "Returns",
+    "商品に欠陥がある場合をのぞき、基本的には返品には応じません。": "Returns are generally not accepted unless the product is defective.",
     "在庫あり": "In stock"
   };
   const reverseTranslations = Object.fromEntries(
@@ -168,28 +250,55 @@
   }
 
   function updateMetadata() {
-    const inventory = location.pathname.endsWith("inventory.html");
-    if (language === "en") {
-      document.title = inventory
-        ? "Inventory & Card Search | Toreca family"
-        : "Toreca family | Trading Card Shop in Kobe Sannomiya";
-      document.querySelector('meta[name="description"]')?.setAttribute(
-        "content",
-        inventory
-          ? "Search current in-store availability at Toreca family by product name, card number, genre, and category."
-          : "Toreca family is a trading card shop in Kobe Sannomiya offering card sales, buying, inventory search, and store information."
-      );
-    } else {
-      document.title = inventory
-        ? "在庫確認・カード検索｜トレカfamily"
-        : "トレカfamily｜神戸・三宮のトレーディングカード専門店";
-      document.querySelector('meta[name="description"]')?.setAttribute(
-        "content",
-        inventory
-          ? "トレカfamilyの在庫確認・カード検索ページです。商品名、カード番号、ジャンル、カテゴリから公開中の店頭在庫を確認できます。"
-          : "神戸・三宮のトレーディングカード専門店、トレカfamily。取り扱いカード、買取、在庫確認、アクセス情報をご案内します。"
-      );
-    }
+    const pathname = location.pathname;
+    const page = pathname.endsWith("inventory.html")
+      ? "inventory"
+      : pathname.endsWith("privacy.html")
+        ? "privacy"
+        : pathname.endsWith("law.html")
+          ? "law"
+          : "home";
+    const metadata = {
+      ja: {
+        home: {
+          title: "トレカfamily｜神戸・三宮のトレーディングカード専門店",
+          description: "神戸・三宮のトレーディングカード専門店、トレカfamily。取り扱いカード、買取、在庫確認、アクセス情報をご案内します。"
+        },
+        inventory: {
+          title: "在庫確認・カード検索｜トレカfamily",
+          description: "トレカfamilyの在庫確認・カード検索ページです。商品名、カード番号、ジャンル、カテゴリから公開中の店頭在庫を確認できます。"
+        },
+        privacy: {
+          title: "プライバシーポリシー｜トレカfamily",
+          description: "トレカfamilyのプライバシーポリシーです。個人情報の取扱い、利用目的、安全管理等についてご案内します。"
+        },
+        law: {
+          title: "特定商取引法に基づく表記｜トレカfamily",
+          description: "トレカfamilyの特定商取引法に基づく表記です。事業者情報、販売価格、支払方法、発送時期、返品条件をご案内します。"
+        }
+      },
+      en: {
+        home: {
+          title: "Toreca family | Trading Card Shop in Kobe Sannomiya",
+          description: "Toreca family is a trading card shop in Kobe Sannomiya offering card sales, buying, inventory search, and store information."
+        },
+        inventory: {
+          title: "Inventory & Card Search | Toreca family",
+          description: "Search current in-store availability at Toreca family by product name, card number, genre, and category."
+        },
+        privacy: {
+          title: "Privacy Policy | Toreca family",
+          description: "Read Toreca family's policy on the handling, use, security, and protection of personal information."
+        },
+        law: {
+          title: "Legal Notice | Toreca family",
+          description: "Legal information for Toreca family, including business details, prices, payment methods, delivery, and returns."
+        }
+      }
+    };
+    const current = metadata[language][page];
+    document.title = current.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", current.description);
   }
 
   function updateButtons() {
