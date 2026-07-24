@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="description" content="トレカfamilyの在庫確認・カード検索ページです。カード名、カテゴリ、レアリティから店頭在庫の目安を確認できます。">
+<meta name="description" content="トレカfamilyの在庫確認・カード検索ページです。商品名、カード番号、ジャンル、カテゴリから公開中の店頭在庫を確認できます。">
 <title>在庫確認・カード検索｜トレカfamily</title>
 <script src="./support.js"></script>
-<script src="./i18n.js?v=20260724-2" defer></script>
+<script src="./i18n.js?v=20260724-3" defer></script>
 </head>
 <body>
 <x-dc>
@@ -42,6 +42,12 @@
   .tf-result:hover{transform:translateY(-4px);box-shadow:0 22px 44px -22px rgba(20,45,76,.4) !important;border-color:#CADAEC !important}
   .tf-field{font-family:inherit;font-size:15px;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:11px;padding:13px 15px;outline:none;transition:border-color .2s ease, box-shadow .2s ease}
   .tf-field:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.14)}
+  .tf-no-image{background:linear-gradient(135deg,#EEF4FA,#F8F4EA);border-bottom:1px solid #E5DDCE}
+  .tf-no-image-card{width:70px;height:92px;border:2px solid #9AB5D1;border-radius:9px;background:#fff;box-shadow:0 10px 24px -12px rgba(20,45,76,.45);position:relative}
+  .tf-no-image-card:before,.tf-no-image-card:after{content:"";position:absolute;left:12px;right:12px;height:2px;background:#C7D5E6}
+  .tf-no-image-card:before{top:31px}.tf-no-image-card:after{top:45px}
+  .tf-meta{display:flex;gap:7px;flex-wrap:wrap}
+  .tf-meta span{font-size:11px;color:#61758D;background:#F1F5F9;border-radius:999px;padding:4px 8px}
   @media (max-width:820px){
     .tf-head{gap:12px !important;padding-left:18px !important;padding-right:18px !important}
     .tf-head-right{gap:12px !important}
@@ -94,7 +100,7 @@
       </div>
       <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;color:#2E75B6;margin-bottom:14px">INVENTORY / CARD SEARCH</div>
       <h1 style="font-size:38px;line-height:1.35;font-weight:900;color:#142D4C;margin:0 0 14px">在庫確認・カード検索</h1>
-      <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0;max-width:600px">お探しのカードの在庫を、カテゴリ・キーワード・レアリティから確認できます。表示は店頭在庫の目安です。詳細やお取り置きはお気軽にお問い合わせください。</p>
+      <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0;max-width:680px">商品名またはカード番号から、現在公開中の店頭在庫を検索できます。表示される商品は、在庫数と販売価格が登録されている商品のみです。</p>
     </div>
   </section>
 
@@ -105,30 +111,24 @@
 
       <!-- search panel -->
       <div style="background:#ffffff;border:1px solid #ECE3D0;border-radius:20px;padding:30px 30px 34px;box-shadow:0 22px 48px -30px rgba(20,45,76,.35)">
-        <div style="font-size:13px;font-weight:700;letter-spacing:.04em;color:#7E91A8;margin-bottom:14px">カテゴリ</div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px">
-          <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
-            <button type="button" class="tf-cat" data-active="{{ c.active }}" onClick="{{ c.onClick }}" style="font-size:14px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:999px;padding:10px 20px">{{ c.label }}</button>
-          </sc-for>
-        </div>
         <div class="tf-searchgrid" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end">
           <label style="display:flex;flex-direction:column;gap:8px">
-            <span style="font-size:13px;font-weight:700;color:#7E91A8">キーワード（カード名・型番）</span>
-            <input class="tf-field" type="text" placeholder="例：リザードン / ブルーアイズ / ルフィ" value="{{ keyword }}" onInput="{{ onKeyword }}">
+            <span style="font-size:13px;font-weight:700;color:#7E91A8">商品名・カード番号</span>
+            <input class="tf-field" type="search" placeholder="例：リザードン / ST21-014" value="{{ keyword }}" onInput="{{ onKeyword }}">
           </label>
           <label style="display:flex;flex-direction:column;gap:8px">
-            <span style="font-size:13px;font-weight:700;color:#7E91A8">レアリティ</span>
-            <select class="tf-field" onChange="{{ onRarity }}">
-              <sc-for list="{{ rarities }}" as="r" hint-placeholder-count="4">
-                <option value="{{ r }}">{{ r }}</option>
+            <span style="font-size:13px;font-weight:700;color:#7E91A8">ジャンル</span>
+            <select class="tf-field" value="{{ genre }}" onChange="{{ onGenre }}">
+              <sc-for list="{{ genres }}" as="g" hint-placeholder-count="4">
+                <option value="{{ g }}">{{ g }}</option>
               </sc-for>
             </select>
           </label>
           <label style="display:flex;flex-direction:column;gap:8px">
-            <span style="font-size:13px;font-weight:700;color:#7E91A8">在庫</span>
-            <select class="tf-field" onChange="{{ onStock }}">
-              <sc-for list="{{ stockFilters }}" as="s" hint-placeholder-count="3">
-                <option value="{{ s }}">{{ s }}</option>
+            <span style="font-size:13px;font-weight:700;color:#7E91A8">カテゴリ</span>
+            <select class="tf-field" value="{{ category }}" onChange="{{ onCategory }}">
+              <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+                <option value="{{ c }}">{{ c }}</option>
               </sc-for>
             </select>
           </label>
@@ -141,30 +141,48 @@
         </div>
       </div>
 
-      <!-- result count -->
-      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:38px 2px 20px">
-        <div style="font-size:15px;color:#48586C"><strong style="color:#142D4C;font-size:20px">{{ resultCount }}</strong> 件のカードが見つかりました</div>
-        <div style="font-size:13px;color:#9AAAC0">最終更新：2026/06/28</div>
-      </div>
+      <sc-if value="{{ isLoading }}">
+        <div role="status" style="background:#fff;border:1.5px solid #D8CFBB;border-radius:16px;padding:54px 32px;text-align:center;margin-top:38px">
+          <div style="font-size:17px;font-weight:700;color:#5A6E86">在庫データを読み込んでいます…</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasLoadError }}">
+        <div role="alert" style="background:#fff;border:1.5px solid #E1B9B2;border-radius:16px;padding:54px 32px;text-align:center;margin-top:38px">
+          <div style="font-size:18px;font-weight:700;color:#A34E43;margin-bottom:10px">在庫データを読み込めませんでした</div>
+          <div style="font-size:14px;line-height:1.8;color:#7E91A8">{{ loadError }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isReady }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:38px 2px 20px">
+          <div style="font-size:15px;color:#48586C"><strong style="color:#142D4C;font-size:20px">{{ resultCount }}</strong> 件の商品が見つかりました</div>
+          <div style="font-size:13px;color:#9AAAC0"><span>最終更新：</span>{{ updatedAt }}</div>
+        </div>
+      </sc-if>
 
       <!-- results grid -->
       <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
         <div class="tf-results" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
           <sc-for list="{{ results }}" as="card" hint-placeholder-count="6">
             <div class="tf-result" style="background:#fff;border:1px solid #EAE0CC;border-radius:16px;overflow:hidden;box-shadow:0 14px 30px -22px rgba(20,45,76,.4);display:flex;flex-direction:column">
-              <div style="position:relative;aspect-ratio:5/4;background:{{ card.thumbBg }};display:flex;align-items:center;justify-content:center">
-                <div style="width:74px;height:100px;border-radius:10px;background:#ffffff;box-shadow:0 8px 18px -8px rgba(20,45,76,.4);display:flex;align-items:center;justify-content:center">
-                  <div style="width:44px;height:70px;border-radius:6px;border:2px solid {{ card.accent }}"></div>
-                </div>
-                <span style="position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:{{ card.accent }};border-radius:999px;padding:4px 11px">{{ card.game }}</span>
-                <span style="position:absolute;top:12px;right:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#142D4C;background:rgba(255,255,255,.92);border-radius:6px;padding:4px 9px">{{ card.rarity }}</span>
+              <div class="tf-no-image" style="height:132px;display:flex;align-items:center;justify-content:center;position:relative">
+                <div class="tf-no-image-card" aria-hidden="true"></div>
+                <span style="position:absolute;left:14px;bottom:11px;font-size:10px;font-weight:700;letter-spacing:.08em;color:#7E91A8">NO IMAGE</span>
+                <span style="position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:#2E75B6;border-radius:999px;padding:4px 11px">{{ card.genre }}</span>
+                <span style="position:absolute;top:12px;right:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#142D4C;background:rgba(255,255,255,.94);border-radius:6px;padding:4px 9px">{{ card.rarity }}</span>
               </div>
               <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1">
                 <div style="font-size:16px;font-weight:700;color:#142D4C;line-height:1.4">{{ card.name }}</div>
-                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#9AAAC0;letter-spacing:.03em">{{ card.code }}</div>
+                <div class="tf-meta">
+                  <span>{{ card.category }}</span>
+                  <span>{{ card.condition }}</span>
+                </div>
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#7E91A8;letter-spacing:.03em">{{ card.cardNumber }}</div>
+                <div style="font-size:12px;color:#93A4BA;line-height:1.55">{{ card.packName }}</div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
                   <span style="font-size:20px;font-weight:900;color:#1F4E79;font-family:'Plus Jakarta Sans',sans-serif">{{ card.price }}</span>
-                  <span style="font-size:12px;font-weight:700;color:{{ card.stockColor }};background:{{ card.stockBg }};border-radius:999px;padding:5px 11px">{{ card.stockLabel }}</span>
+                  <span style="font-size:12px;font-weight:700;color:#1F6B45;background:#E4F1EA;border-radius:999px;padding:5px 11px">在庫あり</span>
                 </div>
                 <a href="index.html#contact" class="tf-btn" style="margin-top:12px;text-align:center;font-size:14px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:10px;padding:11px 12px">在庫を問い合わせる</a>
               </div>
@@ -173,16 +191,22 @@
         </div>
       </sc-if>
 
+      <sc-if value="{{ hasMore }}">
+        <div style="display:flex;justify-content:center;margin-top:28px">
+          <button type="button" class="tf-btn" onClick="{{ onLoadMore }}" style="font-size:15px;font-weight:700;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:10px;padding:13px 28px;cursor:pointer">さらに表示</button>
+        </div>
+      </sc-if>
+
       <!-- empty state -->
       <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
         <div style="background:#fff;border:1.5px dashed #D8CFBB;border-radius:16px;padding:64px 32px;text-align:center">
           <div style="font-size:18px;font-weight:700;color:#5A6E86;margin-bottom:10px">該当するカードが見つかりませんでした</div>
-          <div style="font-size:14px;line-height:1.8;color:#93A4BA;max-width:440px;margin:0 auto">キーワードやレアリティの条件を変えてお試しください。お探しのカードは、お問い合わせいただければ在庫をお調べします。</div>
+          <div style="font-size:14px;line-height:1.8;color:#93A4BA;max-width:440px;margin:0 auto">商品名・カード番号、ジャンル、カテゴリの条件を変えてお試しください。お探しの商品はお問い合わせから在庫をご確認いただけます。</div>
         </div>
       </sc-if>
 
       <!-- note -->
-      <div style="margin-top:34px;font-size:12.5px;line-height:1.8;color:#93A4BA;text-align:center">※ 在庫・価格は店頭状況により変動します。最新情報は公式Xでも随時発信中です。</div>
+      <div style="margin-top:34px;font-size:12.5px;line-height:1.8;color:#93A4BA;text-align:center">※ 公開中の商品は在庫ありですが、在庫・価格は店頭状況により変動します。最新状況はお問い合わせください。</div>
     </div>
   </section>
 
@@ -246,92 +270,118 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { cat: "すべて", keyword: "", rarity: "すべて", stock: "すべて" };
+  state = {
+    keyword: "",
+    genre: "すべて",
+    category: "すべて",
+    items: [],
+    status: "loading",
+    loadError: "",
+    updatedAt: "",
+    visibleCount: 24,
+  };
 
   componentDidMount() {
     const burger = document.querySelector(".tf-burger");
     const nav = document.querySelector(".tf-nav");
     if (burger && nav) burger.addEventListener("click", () => nav.classList.toggle("tf-nav-open"));
+    fetch("./data/inventory.json", {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+      })
+      .then((inventory) => {
+        if (!inventory || !Array.isArray(inventory.items)) throw new Error("Invalid inventory data");
+        const items = inventory.items.filter((item) =>
+          item &&
+          typeof item.id === "string" &&
+          typeof item.name === "string" &&
+          Number.isSafeInteger(item.price) &&
+          item.price > 0 &&
+          Number.isSafeInteger(item.stock) &&
+          item.stock > 0
+        );
+        if (items.length !== inventory.items.length) throw new Error("Unpublishable item detected");
+        this.setState({
+          items,
+          status: "ready",
+          updatedAt: inventory.updatedAt || "",
+          loadError: "",
+        });
+      })
+      .catch(() => {
+        this.setState({
+          items: [],
+          status: "error",
+          loadError: "時間をおいて再読み込みするか、公式Xからお問い合わせください。",
+        });
+      });
   }
 
-  _cards() {
-    const P = (n) => "¥" + n.toLocaleString();
-    return [
-      { name: "リザードン ex SAR", search: "Charizard ex SAR", game: "ポケモンカード", rarity: "SAR", code: "SV3a 201/190", price: 42000, stock: "在庫あり" },
-      { name: "ミュウツー ex SR", search: "Mewtwo ex SR", game: "ポケモンカード", rarity: "SR", code: "SV5M 084/071", price: 3800, stock: "残りわずか" },
-      { name: "ピカチュウ AR", search: "Pikachu AR", game: "ポケモンカード", rarity: "AR", code: "SV4a 232/190", price: 950, stock: "在庫あり" },
-      { name: "ナンジャモ SAR", search: "Iono SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4M 091/066", price: 28000, stock: "在庫なし" },
-      { name: "青眼の白龍 QCSE", search: "Blue-Eyes White Dragon QCSE", game: "遊戯王", rarity: "QCSE", code: "QCCU-JP001", price: 6800, stock: "在庫あり" },
-      { name: "ブラック・マジシャン 25th", search: "Dark Magician 25th", game: "遊戯王", rarity: "25th", code: "QCCP-JP001", price: 4200, stock: "残りわずか" },
-      { name: "灰流うらら プリシク", search: "Ash Blossom Joyous Spring", game: "遊戯王", rarity: "20th", code: "20TH-JPC02", price: 15800, stock: "在庫あり" },
-      { name: "モンキー・D・ルフィ SEC", search: "Monkey D. Luffy SEC", game: "ワンピースカード", rarity: "SEC", code: "OP01-120", price: 9800, stock: "在庫あり" },
-      { name: "シャンクス SR パラレル", search: "Shanks SR Parallel", game: "ワンピースカード", rarity: "SR-P", code: "OP01-120", price: 5600, stock: "残りわずか" },
-      { name: "ヤマト SR", search: "Yamato SR", game: "ワンピースカード", rarity: "SR", code: "OP04-112", price: 1400, stock: "在庫あり" },
-      { name: "エース SR パラレル", search: "Ace SR Parallel", game: "ワンピースカード", rarity: "SR-P", code: "OP02-013", price: 3200, stock: "在庫なし" },
-      { name: "ミモザ SAR", search: "Miriam SAR", game: "ポケモンカード", rarity: "SAR", code: "SV4a 349/190", price: 19800, stock: "在庫あり" },
-    ].map((c) => ({ ...c, priceText: P(c.price) }));
+  _label(value) {
+    return value && String(value).trim() ? String(value).trim() : "未分類";
   }
 
-  _gameColor(game) {
-    if (game === "ポケモンカード") return "#2E75B6";
-    if (game === "遊戯王") return "#1F4E79";
-    return "#5B7FA6";
-  }
-  _thumbBg(game) {
-    if (game === "ポケモンカード") return "#EAF1F8";
-    if (game === "遊戯王") return "#E7ECF3";
-    return "#EEF1F6";
-  }
-  _stockStyle(stock) {
-    if (stock === "在庫あり") return { color: "#1F6B45", bg: "#E4F1EA" };
-    if (stock === "残りわずか") return { color: "#A9702A", bg: "#F6ECDC" };
-    return { color: "#9AAAC0", bg: "#EEF0F3" };
+  _updatedAt(value) {
+    if (!value) return "未更新";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "未更新";
+    return new Intl.DateTimeFormat("ja-JP", {
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit",
+    }).format(date);
   }
 
   renderVals() {
     const navHover = { color: "#2E75B6" };
     const xHover = { color: "#2E75B6", transform: "translateY(-2px)" };
-
-    const cats = ["すべて", "ポケモンカード", "遊戯王", "ワンピースカード"];
-    const rarities = ["すべて", "SAR", "SR", "SR-P", "AR", "SEC", "QCSE", "25th", "20th"];
-    const stockFilters = ["すべて", "在庫あり", "残りわずか"];
-
-    const { cat, keyword, rarity, stock } = this.state;
-    const kw = (keyword || "").trim().toLowerCase();
-
-    const results = this._cards().filter((c) => {
-      if (cat !== "すべて" && c.game !== cat) return false;
-      if (rarity !== "すべて" && c.rarity !== rarity) return false;
-      if (stock !== "すべて" && c.stock !== stock) return false;
-      if (kw && !(c.name.toLowerCase().includes(kw) || c.search.toLowerCase().includes(kw) || c.code.toLowerCase().includes(kw))) return false;
+    const allItems = this.state.items || [];
+    const genres = ["すべて", ...Array.from(new Set(allItems.map((item) => this._label(item.genre)))).sort()];
+    const categories = ["すべて", ...Array.from(new Set(allItems.map((item) => this._label(item.category)))).sort()];
+    const kw = (this.state.keyword || "").trim().normalize("NFKC").toLowerCase();
+    const filtered = allItems.filter((item) => {
+      if (this.state.genre !== "すべて" && this._label(item.genre) !== this.state.genre) return false;
+      if (this.state.category !== "すべて" && this._label(item.category) !== this.state.category) return false;
+      const haystack = [item.name, item.cardNumber].join(" ").normalize("NFKC").toLowerCase();
+      if (kw && !haystack.includes(kw)) return false;
       return true;
-    }).map((c) => {
-      const ss = this._stockStyle(c.stock);
-      return {
-        name: c.name, game: c.game, rarity: c.rarity, code: c.code, price: c.priceText,
-        accent: this._gameColor(c.game), thumbBg: this._thumbBg(c.game),
-        stockLabel: c.stock, stockColor: ss.color, stockBg: ss.bg,
-      };
     });
-
-    const categories = cats.map((label) => ({
-      label,
-      active: this.state.cat === label ? "1" : "0",
-      onClick: () => this.setState({ cat: label }),
+    const results = filtered.slice(0, this.state.visibleCount).map((item) => ({
+      id: item.id,
+      name: item.name,
+      genre: this._label(item.genre),
+      category: this._label(item.category),
+      condition: item.condition || "状態表記なし",
+      rarity: item.rarity || "—",
+      cardNumber: item.cardNumber || "カード番号なし",
+      packName: item.packName || item.expansion || "",
+      price: "¥" + Number(item.price).toLocaleString("ja-JP"),
     }));
 
     return {
       navHover, xHover,
-      categories, rarities, stockFilters,
+      genres, categories,
+      genre: this.state.genre,
+      category: this.state.category,
       keyword: this.state.keyword,
-      onKeyword: (e) => this.setState({ keyword: e.target.value }),
-      onRarity: (e) => this.setState({ rarity: e.target.value }),
-      onStock: (e) => this.setState({ stock: e.target.value }),
+      onKeyword: (e) => this.setState({ keyword: e.target.value, visibleCount: 24 }),
+      onGenre: (e) => this.setState({ genre: e.target.value, visibleCount: 24 }),
+      onCategory: (e) => this.setState({ category: e.target.value, visibleCount: 24 }),
       onSearch: () => this.forceUpdate(),
+      onLoadMore: () => this.setState({ visibleCount: this.state.visibleCount + 24 }),
       results,
-      resultCount: results.length,
-      hasResults: results.length > 0,
-      noResults: results.length === 0,
+      resultCount: filtered.length,
+      updatedAt: this._updatedAt(this.state.updatedAt),
+      isLoading: this.state.status === "loading",
+      isReady: this.state.status === "ready",
+      hasLoadError: this.state.status === "error",
+      loadError: this.state.loadError,
+      hasResults: this.state.status === "ready" && filtered.length > 0,
+      noResults: this.state.status === "ready" && filtered.length === 0,
+      hasMore: this.state.status === "ready" && this.state.visibleCount < filtered.length,
     };
   }
 }

@@ -1,0 +1,8 @@
+# Cloudflare Workerのローカル開発用サンプルです。
+# 実際の値を入れた .dev.vars はGitへ追加しないでください。
+GITHUB_TOKEN=github_pat_xxxxxxxxxxxxxxxxx
+GITHUB_OWNER=nostechnolosy
+GITHUB_REPO=toreca-family-website
+GITHUB_BRANCH=test/site-updater
+APP_API_KEY=replace-with-a-long-random-secret
+ALLOWED_ORIGIN=http://localhost:1420,tauri://localhost,https://tauri.localhost

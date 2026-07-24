@@ -13,7 +13,8 @@
 <link rel="preload" as="image" href="assets/card-buying-en.png?v=20260724-3" type="image/png">
 <link rel="preload" as="image" href="assets/card-secure-en.png?v=20260724-3" type="image/png">
 <script src="./support.js"></script>
-<script src="./i18n.js?v=20260724-2" defer></script>
+<script src="./i18n.js?v=20260724-3" defer></script>
+<script src="./content-loader.js?v=20260724-2" defer></script>
 </head>
 <body>
 <x-dc>
@@ -300,11 +301,12 @@
       <div>
         <div class="tf-buy-img" style="max-width:80%;margin:0 auto;position:relative">
           <div style="border-radius:16px;overflow:hidden;border:1px solid #ECE3D0;box-shadow:0 20px 46px -24px rgba(20,45,76,.4)">
-            <img src="assets/kaitori-hyo.jpg" alt="ポケモンカード BOX 買取表（更新日 2026/06/28）" style="width:100%;height:auto;display:block">
+            <img data-buyback-image src="assets/kaitori-hyo.jpg" alt="ポケモンカード BOX 買取表（更新日 2026/06/28）" style="width:100%;height:auto;display:block">
           </div>
           <img class="tf-mascot" src="assets/mascot-peek.png" alt="トレカfamily マスコット" style="position:absolute;right:5%;bottom:0;transform:translateY(92%) rotate(180deg);z-index:2;pointer-events:none">
         </div>
-        <div style="font-size:12.5px;line-height:1.7;color:#93A4BA;margin-top:12px;text-align:center">※ 状態減額なし ・ シュリンク付きの価格です ・ 更新日 2026/06/28</div>
+        <div style="font-size:12.5px;line-height:1.7;color:#93A4BA;margin-top:12px;text-align:center">※ 状態減額なし ・ シュリンク付きの価格です ・ 更新日 <span data-buyback-date>2026/06/28</span></div>
+        <div data-buyback-status role="status" style="font-size:12.5px;line-height:1.7;color:#A45A37;margin-top:8px;text-align:center"></div>
       </div>
     </div>
   </section>

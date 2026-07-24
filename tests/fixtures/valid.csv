@@ -1,0 +1,6 @@
+在庫用テンプレート,,,,,,,,,,,,,,
+日本語の列名,,,,,,,,,,,,,,
+ハンドル名,,,,,,,,,,,,,,
+id,item_id,myca_item_id,display_name,condition_option_display_name,specific_sell_price,sell_price,stock_number,genre_display_name,category_display_name,expansion,cardnumber,rarity,pack_name,upload_error
+この下の行からデータ開始,,,,,,,,,,,,,,
+1,10,100,正常カード,状態A,,1200,1,ポケモン,カード,SV,SV-001,SR,テストパック,

@@ -38,7 +38,7 @@
     "最新の買取価格を画像で掲示しています。店頭ではその場でスピード査定。お手持ちのカードを高価買取いたします。": "See our latest buying prices. We provide fast in-store appraisals and competitive offers for your cards.",
     "買取のご相談はこちら": "Ask us about selling cards",
     "ポケモンカード BOX 買取表（更新日 2026/06/28）": "Pokémon booster box buying price list (updated June 28, 2026)",
-    "※ 状態減額なし ・ シュリンク付きの価格です ・ 更新日 2026/06/28": "Prices shown assume sealed products with shrink wrap. Updated June 28, 2026.",
+    "※ 状態減額なし ・ シュリンク付きの価格です ・ 更新日": "Prices shown assume sealed products with shrink wrap. Updated",
     "在庫確認・カード検索": "Inventory & Card Search",
     "店内のシングルカード壁面ディスプレイ": "In-store single-card wall display",
     "お探しのカードの在庫を確認できます。シングルカードを豊富に取り揃え、店頭でもスタッフがすぐにお調べします。気になる一枚は、お気軽にお問い合わせください。": "Check availability for the cards you are looking for. We carry a wide selection of singles, and our staff can help you in store.",
@@ -72,38 +72,30 @@
     "お手持ちのカードを高価買取。最新の買取表を掲示し、店頭でスピード査定いたします。": "Sell your cards at competitive prices with our latest price list and fast in-store appraisals.",
     "お探しのカードの在庫を確認。シングルカードを豊富に取り揃えています。": "Check availability across our wide selection of single cards.",
     "神戸・三ノ宮の店舗まで、迷わず行ける道順をご案内します。": "Find clear directions to our store in Kobe Sannomiya.",
-    "お探しのカードの在庫を、カテゴリ・キーワード・レアリティから確認できます。表示は店頭在庫の目安です。詳細やお取り置きはお気軽にお問い合わせください。": "Search estimated in-store availability by category, keyword, and rarity. Contact us for details or to request a hold.",
+    "商品名またはカード番号から、現在公開中の店頭在庫を検索できます。表示される商品は、在庫数と販売価格が登録されている商品のみです。": "Search current in-store availability by product name or card number. Only products with registered stock and selling prices are shown.",
+    "商品名・カード番号": "Product name or card number",
+    "例：リザードン / ST21-014": "e.g. Charizard / ST21-014",
+    "ジャンル": "Genre",
     "カテゴリ": "Category",
     "すべて": "All",
-    "キーワード（カード名・型番）": "Keyword (card name or set number)",
-    "例：リザードン / ブルーアイズ / ルフィ": "e.g. Charizard / Blue-Eyes / Luffy",
-    "レアリティ": "Rarity",
-    "在庫": "Availability",
     "カードを検索": "Search cards",
-    "件のカードが見つかりました": "cards found",
-    "最終更新：2026/06/28": "Last updated: June 28, 2026",
+    "件の商品が見つかりました": "products found",
+    "最終更新：": "Last updated: ",
+    "在庫データを読み込んでいます…": "Loading inventory data…",
+    "在庫データを読み込めませんでした": "Inventory data could not be loaded",
+    "時間をおいて再読み込みするか、公式Xからお問い合わせください。": "Please reload later or contact us through our official X account.",
+    "未分類": "Uncategorized",
+    "状態表記なし": "Condition not listed",
+    "カード番号なし": "No card number",
+    "さらに表示": "Show more",
     "該当するカードが見つかりませんでした": "No matching cards were found",
-    "キーワードやレアリティの条件を変えてお試しください。お探しのカードは、お問い合わせいただければ在庫をお調べします。": "Try changing the keyword or rarity. Contact us and we will check availability for the card you need.",
-    "※ 在庫・価格は店頭状況により変動します。最新情報は公式Xでも随時発信中です。": "Inventory and prices may change. Follow our official X account for the latest updates.",
+    "商品名・カード番号、ジャンル、カテゴリの条件を変えてお試しください。お探しの商品はお問い合わせから在庫をご確認いただけます。": "Try changing the product name, card number, genre, or category. Contact us to check other items.",
+    "※ 公開中の商品は在庫ありですが、在庫・価格は店頭状況により変動します。最新状況はお問い合わせください。": "Published products are in stock, but availability and prices may change. Contact us for the latest status.",
     "お探しのカードが見つからない時は": "Can't find the card you need?",
     "在庫にないカードや、お取り置き・入荷のご相談も承ります。公式Xからお気軽にお問い合わせください。": "Contact us on X about unavailable cards, holds, or upcoming arrivals.",
     "公式Xを見る": "View official X",
     "公式X": "Official X",
-    "在庫あり": "In stock",
-    "残りわずか": "Low stock",
-    "在庫なし": "Out of stock",
-    "リザードン ex SAR": "Charizard ex SAR",
-    "ミュウツー ex SR": "Mewtwo ex SR",
-    "ピカチュウ AR": "Pikachu AR",
-    "ナンジャモ SAR": "Iono SAR",
-    "青眼の白龍 QCSE": "Blue-Eyes White Dragon QCSE",
-    "ブラック・マジシャン 25th": "Dark Magician 25th",
-    "灰流うらら プリシク": "Ash Blossom & Joyous Spring Prismatic Secret Rare",
-    "モンキー・D・ルフィ SEC": "Monkey D. Luffy SEC",
-    "シャンクス SR パラレル": "Shanks SR Parallel",
-    "ヤマト SR": "Yamato SR",
-    "エース SR パラレル": "Ace SR Parallel",
-    "ミモザ SAR": "Miriam SAR"
+    "在庫あり": "In stock"
   };
   const reverseTranslations = Object.fromEntries(
     Object.entries(translations).map(([japanese, english]) => [english, japanese])
@@ -183,7 +175,7 @@
       document.querySelector('meta[name="description"]')?.setAttribute(
         "content",
         inventory
-          ? "Search estimated in-store card availability at Toreca family by keyword, category, and rarity."
+          ? "Search current in-store availability at Toreca family by product name, card number, genre, and category."
           : "Toreca family is a trading card shop in Kobe Sannomiya offering card sales, buying, inventory search, and store information."
       );
     } else {
@@ -193,7 +185,7 @@
       document.querySelector('meta[name="description"]')?.setAttribute(
         "content",
         inventory
-          ? "トレカfamilyの在庫確認・カード検索ページです。カード名、カテゴリ、レアリティから店頭在庫の目安を確認できます。"
+          ? "トレカfamilyの在庫確認・カード検索ページです。商品名、カード番号、ジャンル、カテゴリから公開中の店頭在庫を確認できます。"
           : "神戸・三宮のトレーディングカード専門店、トレカfamily。取り扱いカード、買取、在庫確認、アクセス情報をご案内します。"
       );
     }

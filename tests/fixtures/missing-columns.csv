@@ -1,0 +1,6 @@
+在庫用テンプレート
+日本語の列名
+ハンドル名
+id,display_name,stock_number
+この下の行からデータ開始
+1,不足CSV,1

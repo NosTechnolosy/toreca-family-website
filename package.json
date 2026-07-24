@@ -1,0 +1,13 @@
+{
+  "name": "toreca-family-operations",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "dev:updater": "pnpm --filter @toreca-family/site-updater dev",
+    "build:updater": "pnpm --filter @toreca-family/site-updater build",
+    "tauri:dev": "pnpm --filter @toreca-family/site-updater tauri dev",
+    "tauri:build": "pnpm --filter @toreca-family/site-updater tauri build",
+    "dev:worker": "pnpm --filter @toreca-family/update-worker dev",
+    "test": "pnpm -r test"
+  }
+}
