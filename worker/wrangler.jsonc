@@ -7,6 +7,12 @@
     "enabled": true,
     "head_sampling_rate": 1
   },
+  "vars": {
+    "GITHUB_OWNER": "NosTechnolosy",
+    "GITHUB_REPO": "toreca-family-website",
+    "GITHUB_BRANCH": "test/site-updater",
+    "ALLOWED_ORIGIN": "tauri://localhost,http://tauri.localhost,https://tauri.localhost"
+  },
   "ratelimits": [
     {
       "name": "UPDATES_RATE_LIMITER",
