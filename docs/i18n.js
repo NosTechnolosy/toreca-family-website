@@ -93,7 +93,6 @@
     "※ 公開中の商品は在庫ありですが、在庫・価格は店頭状況により変動します。最新状況はお問い合わせください。": "Published products are in stock, but availability and prices may change. Contact us for the latest status.",
     "お探しのカードが見つからない時は": "Can't find the card you need?",
     "在庫にないカードや、お取り置き・入荷のご相談も承ります。公式Xからお気軽にお問い合わせください。": "Contact us on X about unavailable cards, holds, or upcoming arrivals.",
-    "公式Xを見る": "View official X",
     "公式X": "Official X",
     "在庫あり": "In stock"
   };
