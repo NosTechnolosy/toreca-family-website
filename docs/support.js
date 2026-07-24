@@ -318,6 +318,8 @@
     onclick: "onClick",
     onchange: "onChange",
     oninput: "onInput",
+    oncompositionstart: "onCompositionStart",
+    oncompositionend: "onCompositionEnd",
     onsubmit: "onSubmit",
     onkeydown: "onKeyDown",
     onkeyup: "onKeyUp",

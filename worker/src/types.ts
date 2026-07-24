@@ -5,16 +5,21 @@ export interface Env {
   GITHUB_BRANCH: string;
   APP_API_KEY: string;
   ALLOWED_ORIGIN: string;
+  AI?: Ai;
   UPDATES_RATE_LIMITER?: {
     limit(input: { key: string }): Promise<{ success: boolean }>;
   };
 }
+
+export type TranslationSource = "manual" | "auto" | "fallback";
 
 export interface PublicInventoryItem {
   id: string;
   itemId: string;
   mycaItemId: string;
   name: string;
+  nameEn: string;
+  nameEnSource: TranslationSource;
   condition: string;
   price: number;
   stock: number;

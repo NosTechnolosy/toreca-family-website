@@ -6,6 +6,10 @@ import {
 } from "./github";
 import type { Env, SiteContent } from "./types";
 import {
+  enrichInventoryTranslations,
+  parsePreviousInventory
+} from "./translation";
+import {
   validateBuyback,
   validateInventory,
   ValidationError
@@ -73,7 +77,14 @@ export default {
 async function updateInventory(request: Request, env: Env) {
   const body = await readJsonWithLimit(request, 10 * 1024 * 1024);
   const now = tokyoIsoString();
-  const inventory = validateInventory(body, now);
+  const validated = validateInventory(body, now);
+  let previous = null;
+  try {
+    previous = parsePreviousInventory(await readTextFile(env, INVENTORY_PATH));
+  } catch {
+    // Translation reuse is optional; a read failure must not prevent publishing.
+  }
+  const { inventory, stats } = await enrichInventoryTranslations(validated, previous, env.AI);
   await commitFiles(
     env,
     [{ path: INVENTORY_PATH, content: `${JSON.stringify(inventory)}\n` }],
@@ -84,7 +95,8 @@ async function updateInventory(request: Request, env: Env) {
       message: "在庫データを更新しました。",
       updatedAt: now,
       publishedCount: inventory.publishedCount,
-      excludedCount: inventory.excludedCount
+      excludedCount: inventory.excludedCount,
+      ...stats
     },
     200,
     request,

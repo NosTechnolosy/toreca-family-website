@@ -326,6 +326,9 @@
     translateTree(document.body);
     updateMetadata();
     updateButtons();
+    window.dispatchEvent(new CustomEvent("tf-languagechange", {
+      detail: { language }
+    }));
   }
 
   function setLanguage(next) {

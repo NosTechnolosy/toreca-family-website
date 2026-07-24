@@ -201,7 +201,7 @@ async fn update_inventory(
         &format!("{api_url}/api/inventory/update"),
         &api_key,
         &inventory,
-        Duration::from_secs(60),
+        Duration::from_secs(180),
     )
     .await
 }

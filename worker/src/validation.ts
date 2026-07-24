@@ -1,7 +1,8 @@
 import type {
   BuybackUpdateRequest,
   PublicInventory,
-  PublicInventoryItem
+  PublicInventoryItem,
+  TranslationSource
 } from "./types";
 
 export class ValidationError extends Error {}
@@ -11,6 +12,8 @@ const ITEM_KEYS = new Set([
   "itemId",
   "mycaItemId",
   "name",
+  "nameEn",
+  "nameEnSource",
   "condition",
   "price",
   "stock",
@@ -35,6 +38,12 @@ const positiveInteger = (value: unknown, label: string) => {
     throw new ValidationError(`${label}は1以上の整数である必要があります。`);
   }
   return Number(value);
+};
+
+const translationSource = (value: unknown): TranslationSource => {
+  if (value === undefined || value === "") return "fallback";
+  if (value === "manual" || value === "auto" || value === "fallback") return value;
+  throw new ValidationError("英語名の登録区分が不正です。");
 };
 
 export function validateInventory(value: unknown, now: string): PublicInventory {
@@ -67,6 +76,8 @@ export function validateInventory(value: unknown, now: string): PublicInventory 
       itemId: text(item.itemId, 80),
       mycaItemId: text(item.mycaItemId, 80),
       name: text(item.name, 300, true),
+      nameEn: item.nameEn === undefined ? "" : text(item.nameEn, 300),
+      nameEnSource: translationSource(item.nameEnSource),
       condition: text(item.condition, 120),
       price: positiveInteger(item.price, "販売価格"),
       stock: positiveInteger(item.stock, "在庫数"),
