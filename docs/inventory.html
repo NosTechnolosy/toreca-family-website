@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="description" content="トレカfamilyの在庫確認・カード検索ページです。商品名、カード番号、ジャンル、カテゴリから公開中の店頭在庫を確認できます。">
 <title>在庫確認・カード検索｜トレカfamily</title>
-<script src="./support.js?v=20260724-2"></script>
+<script src="./support.js?v=20260730-1"></script>
 <script src="./i18n.js?v=20260724-6" defer></script>
 <script src="./viewport-fix.js?v=20260724-1" defer></script>
 </head>
@@ -45,6 +45,8 @@
   .tf-field{font-family:inherit;font-size:15px;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:11px;padding:13px 15px;outline:none;transition:border-color .2s ease, box-shadow .2s ease}
   .tf-field:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.14)}
   .tf-no-image{background:linear-gradient(135deg,#EEF4FA,#F8F4EA);border-bottom:1px solid #E5DDCE}
+  .tf-card-media{height:220px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(135deg,#EEF4FA,#F8F4EA);border-bottom:1px solid #E5DDCE;overflow:hidden}
+  .tf-card-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:12px;background:#F7F4ED}
   .tf-no-image-card{width:70px;height:92px;border:2px solid #9AB5D1;border-radius:9px;background:#fff;box-shadow:0 10px 24px -12px rgba(20,45,76,.45);position:relative}
   .tf-no-image-card:before,.tf-no-image-card:after{content:"";position:absolute;left:12px;right:12px;height:2px;background:#C7D5E6}
   .tf-no-image-card:before{top:31px}.tf-no-image-card:after{top:45px}
@@ -168,9 +170,12 @@
         <div class="tf-results" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
           <sc-for list="{{ results }}" as="card" hint-placeholder-count="6">
             <div class="tf-result" style="background:#fff;border:1px solid #EAE0CC;border-radius:16px;overflow:hidden;box-shadow:0 14px 30px -22px rgba(20,45,76,.4);display:flex;flex-direction:column">
-              <div class="tf-no-image" style="height:132px;display:flex;align-items:center;justify-content:center;position:relative">
+              <div class="tf-card-media">
                 <div class="tf-no-image-card" aria-hidden="true"></div>
                 <span style="position:absolute;left:14px;bottom:11px;font-size:10px;font-weight:700;letter-spacing:.08em;color:#7E91A8">NO IMAGE</span>
+                <sc-if value="{{ card.hasImage }}">
+                  <img class="tf-card-image" src="{{ card.imageUrl }}" alt="{{ card.name }}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onError="{{ onImageError }}">
+                </sc-if>
                 <span style="position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:#2E75B6;border-radius:999px;padding:4px 11px">{{ card.genre }}</span>
                 <span style="position:absolute;top:12px;right:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#142D4C;background:rgba(255,255,255,.94);border-radius:6px;padding:4px 9px">{{ card.rarity }}</span>
               </div>
@@ -375,6 +380,8 @@ class Component extends DCLogic {
       cardNumber: item.cardNumber || "カード番号なし",
       packName: item.packName || item.expansion || "",
       price: "¥" + Number(item.price).toLocaleString("ja-JP"),
+      imageUrl: typeof item.imageUrl === "string" ? item.imageUrl : "",
+      hasImage: typeof item.imageUrl === "string" && item.imageUrl.startsWith("https://"),
     }));
 
     return {
@@ -404,6 +411,9 @@ class Component extends DCLogic {
       onCategory: (e) => this.setState({ category: e.target.value, visibleCount: 24 }),
       onSearch: () => this.forceUpdate(),
       onLoadMore: () => this.setState({ visibleCount: this.state.visibleCount + 24 }),
+      onImageError: (e) => {
+        if (e && e.currentTarget) e.currentTarget.style.display = "none";
+      },
       results,
       resultCount: filtered.length,
       updatedAt: this._updatedAt(this.state.updatedAt),

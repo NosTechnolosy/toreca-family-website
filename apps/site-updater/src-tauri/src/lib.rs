@@ -1,10 +1,12 @@
 mod inventory;
+mod product_master;
 
 use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
 use inventory::{
     parse_inventory_file, write_error_csv, ExcludedInventoryRow, InventoryAnalysis,
     PublicInventory,
 };
+use product_master::{parse_product_master_file, ProductMaster, ProductMasterAnalysis};
 use keyring::Entry;
 use reqwest::{header, Client, StatusCode};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
@@ -52,6 +54,7 @@ struct UpdateResult {
     published_count: Option<usize>,
     excluded_count: Option<usize>,
     display_date: Option<String>,
+    matched_image_count: Option<usize>,
 }
 
 #[derive(Serialize)]
@@ -207,6 +210,28 @@ async fn update_inventory(
 }
 
 #[tauri::command]
+async fn update_product_master(
+    app: AppHandle,
+    product_master: ProductMaster,
+) -> Result<UpdateResult, String> {
+    if product_master.published_count == 0
+        || product_master.published_count
+            != product_master.images_by_myca_item_id.len()
+                + product_master.images_by_item_id.len()
+    {
+        return Err("公開できる商品画像がありません。CSVを読み込み直してください。".into());
+    }
+    let (api_url, api_key) = load_connection(&app)?;
+    post_json(
+        &format!("{api_url}/api/product-master/update"),
+        &api_key,
+        &product_master,
+        Duration::from_secs(240),
+    )
+    .await
+}
+
+#[tauri::command]
 async fn update_buyback(
     app: AppHandle,
     path: String,
@@ -349,11 +374,13 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             parse_inventory_csv,
+            parse_product_master_csv,
             export_inventory_errors,
             inspect_buyback_image,
             connection_status,
             save_connection,
             update_inventory,
+            update_product_master,
             update_buyback
         ])
         .run(tauri::generate_context!())
@@ -423,4 +450,11 @@ mod tests {
             "別の更新と重なりました。最新の状態を確認して、もう一度お試しください。"
         );
     }
+}
+
+#[tauri::command]
+async fn parse_product_master_csv(path: String) -> Result<ProductMasterAnalysis, String> {
+    tauri::async_runtime::spawn_blocking(move || parse_product_master_file(Path::new(&path)))
+        .await
+        .map_err(|_| "商品マスタCSVの解析を完了できませんでした。".to_string())?
 }

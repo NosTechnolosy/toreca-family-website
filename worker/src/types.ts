@@ -29,6 +29,7 @@ export interface PublicInventoryItem {
   cardNumber: string;
   rarity: string;
   packName: string;
+  imageUrl?: string;
 }
 
 export interface PublicInventory {
@@ -38,6 +39,16 @@ export interface PublicInventory {
   publishedCount: number;
   excludedCount: number;
   items: PublicInventoryItem[];
+}
+
+export interface ProductMaster {
+  updatedAt: string | null;
+  sourceFileName: string;
+  totalImportedCount: number;
+  publishedCount: number;
+  excludedCount: number;
+  imagesByMycaItemId: Record<string, string>;
+  imagesByItemId: Record<string, string>;
 }
 
 export interface BuybackUpdateRequest {

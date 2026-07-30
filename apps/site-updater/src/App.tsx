@@ -4,16 +4,18 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import type {
   ExcludedInventoryRow,
-  InventoryAnalysis
+  InventoryAnalysis,
+  ProductMasterAnalysis
 } from "../../../shared/types";
 
-type Tab = "inventory" | "buyback";
+type Tab = "inventory" | "productMaster" | "buyback";
 type UpdateResult = {
   message: string;
   updatedAt: string;
   publishedCount?: number;
   excludedCount?: number;
   displayDate?: string;
+  matchedImageCount?: number;
 };
 type ConnectionStatus = { configured: boolean; apiUrl: string };
 type ImageInfo = {
@@ -53,6 +55,7 @@ const formatDateTime = (value?: string) => {
 export default function App() {
   const [tab, setTab] = useState<Tab>("inventory");
   const [analysis, setAnalysis] = useState<InventoryAnalysis | null>(null);
+  const [productMaster, setProductMaster] = useState<ProductMasterAnalysis | null>(null);
   const [image, setImage] = useState<ImageInfo | null>(null);
   const [displayDate, setDisplayDate] = useState(
     new Date().toISOString().slice(0, 10)
@@ -81,6 +84,7 @@ export default function App() {
         if (event.payload.type !== "drop" || !event.payload.paths[0]) return;
         const path = event.payload.paths[0];
         if (tab === "inventory") void parseCsv(path);
+        else if (tab === "productMaster") void parseProductMaster(path);
         else void inspectImage(path);
       })
       .then((unlisten) => {
@@ -126,6 +130,22 @@ export default function App() {
     }
   };
 
+  const parseProductMaster = async (path: string) => {
+    clearStatus();
+    setBusy(true);
+    setProgress("商品マスタCSVを確認しています…");
+    try {
+      const next = await invoke<ProductMasterAnalysis>("parse_product_master_csv", { path });
+      setProductMaster(next);
+    } catch (reason) {
+      setProductMaster(null);
+      setError(String(reason));
+    } finally {
+      setBusy(false);
+      setProgress("");
+    }
+  };
+
   const chooseCsv = async () => {
     const path = await open({
       multiple: false,
@@ -140,6 +160,14 @@ export default function App() {
       filters: [{ name: "買取表画像", extensions: ["jpg", "jpeg", "png", "webp"] }]
     });
     if (typeof path === "string") await inspectImage(path);
+  };
+
+  const chooseProductMaster = async () => {
+    const path = await open({
+      multiple: false,
+      filters: [{ name: "商品マスタCSV", extensions: ["csv"] }]
+    });
+    if (typeof path === "string") await parseProductMaster(path);
   };
 
   const updateInventory = async () => {
@@ -174,6 +202,25 @@ export default function App() {
       });
       setImage(null);
       setResult(nextResult);
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setBusy(false);
+      setProgress("");
+    }
+  };
+
+  const updateProductMaster = async () => {
+    if (!productMaster || busy) return;
+    clearStatus();
+    setBusy(true);
+    setProgress("商品マスタを送信しています…（データ量により数分かかります）");
+    try {
+      setResult(
+        await invoke<UpdateResult>("update_product_master", {
+          productMaster: productMaster.publicProductMaster
+        })
+      );
     } catch (reason) {
       setError(String(reason));
     } finally {
@@ -247,6 +294,9 @@ export default function App() {
         <button className={tab === "inventory" ? "active" : ""} onClick={() => setTab("inventory")}>
           在庫更新
         </button>
+        <button className={tab === "productMaster" ? "active" : ""} onClick={() => setTab("productMaster")}>
+          商品マスタ更新
+        </button>
         <button className={tab === "buyback" ? "active" : ""} onClick={() => setTab("buyback")}>
           買取表更新
         </button>
@@ -318,6 +368,44 @@ export default function App() {
             </>
           )}
         </section>
+      ) : tab === "productMaster" ? (
+        <section className="panel">
+          <div className="section-heading">
+            <div>
+              <span className="step">STEP 1</span>
+              <h2>商品マスタCSVを読み込む</h2>
+            </div>
+            <p>画像URLと商品IDだけを安全に抽出します。</p>
+          </div>
+          <button className="drop-zone" onClick={chooseProductMaster} disabled={busy}>
+            <strong>ここに商品マスタCSVをドロップ</strong>
+            <span>または</span>
+            <em>商品マスタCSVを選択</em>
+          </button>
+
+          {productMaster && (
+            <>
+              <div className="file-summary">
+                <div><span>ファイル名</span><strong>{productMaster.sourceFileName}</strong></div>
+                <div><span>ファイル容量</span><strong>{formatBytes(productMaster.fileSize)}</strong></div>
+                <div><span>文字コード</span><strong>{productMaster.encoding}</strong></div>
+              </div>
+              <div className="stats-grid product-master-stats">
+                <div className="stat"><span>CSV読込件数</span><strong>{productMaster.importedCount.toLocaleString()}件</strong></div>
+                <div className="stat"><span>有効な画像</span><strong>{productMaster.publishedCount.toLocaleString()}件</strong></div>
+                <div className="stat"><span>画像URLなし</span><strong>{productMaster.missingImageCount.toLocaleString()}件</strong></div>
+                <div className="stat"><span>不正な画像URL</span><strong>{productMaster.invalidImageCount.toLocaleString()}件</strong></div>
+                <div className="stat"><span>その他のエラー</span><strong>{productMaster.otherErrorCount.toLocaleString()}件</strong></div>
+              </div>
+              <ProductMasterPreview rows={productMaster.preview} />
+              <div className="actions end">
+                <button className="primary" onClick={updateProductMaster} disabled={busy || !connected}>
+                  商品マスタを更新する
+                </button>
+              </div>
+            </>
+          )}
+        </section>
       ) : (
         <section className="panel">
           <div className="section-heading">
@@ -374,6 +462,9 @@ export default function App() {
             <span>公開対象：{result.publishedCount.toLocaleString()}件　除外：{result.excludedCount?.toLocaleString()}件</span>
           )}
           {result.displayDate && <span>更新日：{result.displayDate}</span>}
+          {result.matchedImageCount !== undefined && (
+            <span>在庫画像との照合：{result.matchedImageCount.toLocaleString()}件</span>
+          )}
           <span>更新日時：{formatDateTime(result.updatedAt)}</span>
           <small>公開サイトへの反映には数分かかる場合があります。</small>
         </div>
@@ -426,6 +517,34 @@ function PreviewTable({
                 <td>{row.price}</td>
                 <td>{row.stock}</td>
                 <td>{row.reason}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ProductMasterPreview({
+  rows
+}: {
+  rows: ProductMasterAnalysis["preview"];
+}) {
+  return (
+    <div className="preview">
+      <h3>登録される画像の一部</h3>
+      <div className="table-scroll">
+        <table className="product-master-table">
+          <thead><tr><th>画像</th><th>商品マスタID</th><th>Myca ID</th><th>商品名</th><th>カード番号</th></tr></thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={`${row.mycaItemId}-${row.itemId}`}>
+                <td><img src={row.imageUrl} alt="" loading="lazy" referrerPolicy="no-referrer" /></td>
+                <td>{row.itemId || "—"}</td>
+                <td>{row.mycaItemId || "—"}</td>
+                <td>{row.name || "—"}</td>
+                <td>{row.cardNumber || "—"}</td>
               </tr>
             ))}
           </tbody>

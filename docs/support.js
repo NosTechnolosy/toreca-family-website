@@ -320,6 +320,7 @@
     oninput: "onInput",
     oncompositionstart: "onCompositionStart",
     oncompositionend: "onCompositionEnd",
+    onerror: "onError",
     onsubmit: "onSubmit",
     onkeydown: "onKeyDown",
     onkeyup: "onKeyUp",

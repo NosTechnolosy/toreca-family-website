@@ -148,4 +148,62 @@ describe("update worker", () => {
     const response = await worker.fetch(request(), env);
     expect(response.status).toBe(409);
   });
+
+  it("updates the product master and enriches the current inventory in one commit", async () => {
+    let blobCount = 0;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (url.includes("/contents/docs/data/inventory.json")) {
+        return new Response(JSON.stringify(body), { status: 200 });
+      }
+      if (url.includes("/git/ref/")) {
+        return Response.json({ object: { sha: "head" } });
+      }
+      if (url.endsWith("/git/commits/head")) {
+        return Response.json({ tree: { sha: "tree" } });
+      }
+      if (url.endsWith("/git/blobs")) {
+        blobCount += 1;
+        return Response.json({ sha: `blob-${blobCount}` });
+      }
+      if (url.endsWith("/git/trees")) {
+        return Response.json({ sha: "new-tree" });
+      }
+      if (url.endsWith("/git/commits")) {
+        return Response.json({ sha: "new-commit" });
+      }
+      if (url.includes("/git/refs/") && init?.method === "PATCH") {
+        return Response.json({ object: { sha: "new-commit" } });
+      }
+      return Response.json({ message: "unexpected" }, { status: 500 });
+    });
+    const response = await worker.fetch(
+      new Request("https://worker.example/api/product-master/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "tauri://localhost",
+          "X-App-Key": env.APP_API_KEY
+        },
+        body: JSON.stringify({
+          updatedAt: null,
+          sourceFileName: "item.csv",
+          totalImportedCount: 1,
+          publishedCount: 1,
+          excludedCount: 0,
+          imagesByMycaItemId: {
+            "100": "https://static.example.com/card.jpg"
+          },
+          imagesByItemId: {}
+        })
+      }),
+      env
+    );
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      matchedImageCount: 1,
+      publishedCount: 1
+    });
+    expect(blobCount).toBe(2);
+  });
 });

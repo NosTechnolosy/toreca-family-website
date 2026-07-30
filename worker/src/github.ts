@@ -13,20 +13,16 @@ type CommitResponse = { tree: { sha: string } };
 type BlobResponse = { sha: string };
 type TreeResponse = { sha: string };
 type CreatedCommit = { sha: string };
-type ContentResponse = { content: string; encoding: "base64" };
-
 export async function readTextFile(env: Env, path: string): Promise<string | null> {
   const response = await githubFetch(
     env,
     `/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/${encodePath(path)}?ref=${encodeURIComponent(env.GITHUB_BRANCH)}`,
-    undefined,
+    { headers: { Accept: "application/vnd.github.raw+json" } },
     true
   );
   if (response.status === 404) return null;
   if (!response.ok) throw await githubError(response);
-  const data = (await response.json()) as ContentResponse;
-  const binary = atob(data.content.replace(/\s/g, ""));
-  return new TextDecoder().decode(Uint8Array.from(binary, (char) => char.charCodeAt(0)));
+  return response.text();
 }
 
 export async function commitFiles(

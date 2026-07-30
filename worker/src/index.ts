@@ -6,16 +6,23 @@ import {
 } from "./github";
 import type { Env, SiteContent } from "./types";
 import {
+  enrichInventoryImages,
+  parseProductMaster,
+  parsePublishedInventory
+} from "./product-master";
+import {
   enrichInventoryTranslations,
   parsePreviousInventory
 } from "./translation";
 import {
   validateBuyback,
   validateInventory,
+  validateProductMaster,
   ValidationError
 } from "./validation";
 
 const INVENTORY_PATH = "docs/data/inventory.json";
+const PRODUCT_MASTER_PATH = "data/product-master.json";
 const CONTENT_PATH = "docs/data/site-content.json";
 const fallbackLimits = new Map<string, { count: number; resetAt: number }>();
 
@@ -49,6 +56,9 @@ export default {
       if (url.pathname === "/api/buyback/update") {
         return await updateBuyback(request, env);
       }
+      if (url.pathname === "/api/product-master/update") {
+        return await updateProductMaster(request, env);
+      }
       return json({ error: "更新先が見つかりません。" }, 404, request, env);
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -79,29 +89,70 @@ async function updateInventory(request: Request, env: Env) {
   const now = tokyoIsoString();
   const validated = validateInventory(body, now);
   let previous = null;
+  let productMaster = null;
   try {
-    previous = parsePreviousInventory(await readTextFile(env, INVENTORY_PATH));
+    const previousText = await readTextFile(env, INVENTORY_PATH);
+    previous = parsePreviousInventory(previousText);
+    productMaster = parseProductMaster(await readTextFile(env, PRODUCT_MASTER_PATH));
   } catch {
-    // Translation reuse is optional; a read failure must not prevent publishing.
+    // Existing data reuse is optional; a read failure must not prevent publishing.
   }
   const { inventory, stats } = await enrichInventoryTranslations(validated, previous, env.AI);
+  const images = enrichInventoryImages(inventory, productMaster, previous);
   await commitFiles(
     env,
-    [{ path: INVENTORY_PATH, content: `${JSON.stringify(inventory)}\n` }],
-    `Update inventory (${inventory.publishedCount} items)`
+    [{ path: INVENTORY_PATH, content: `${JSON.stringify(images.inventory)}\n` }],
+    `Update inventory (${images.inventory.publishedCount} items)`
   );
   return json(
     {
       message: "在庫データを更新しました。",
       updatedAt: now,
-      publishedCount: inventory.publishedCount,
-      excludedCount: inventory.excludedCount,
+      publishedCount: images.inventory.publishedCount,
+      excludedCount: images.inventory.excludedCount,
+      matchedImageCount: images.matchedImageCount,
       ...stats
     },
     200,
     request,
     env
   );
+}
+
+async function updateProductMaster(request: Request, env: Env) {
+  const body = await readJsonWithLimit(request, 10 * 1024 * 1024);
+  const now = tokyoIsoString();
+  const productMaster = validateProductMaster(body, now);
+  const changes: Array<{ path: string; content: string }> = [{
+    path: PRODUCT_MASTER_PATH,
+    content: `${JSON.stringify(productMaster)}\n`
+  }];
+  let matchedImageCount = 0;
+  try {
+    const inventory = parsePublishedInventory(await readTextFile(env, INVENTORY_PATH));
+    if (inventory) {
+      const images = enrichInventoryImages(inventory, productMaster);
+      matchedImageCount = images.matchedImageCount;
+      changes.push({
+        path: INVENTORY_PATH,
+        content: `${JSON.stringify(images.inventory)}\n`
+      });
+    }
+  } catch {
+    // The product master can still be saved when no inventory has been published yet.
+  }
+  await commitFiles(
+    env,
+    changes,
+    `Update product master (${productMaster.publishedCount} images)`
+  );
+  return json({
+    message: "商品マスタを更新しました。",
+    updatedAt: now,
+    publishedCount: productMaster.publishedCount,
+    excludedCount: productMaster.excludedCount,
+    matchedImageCount
+  }, 200, request, env);
 }
 
 async function updateBuyback(request: Request, env: Env) {

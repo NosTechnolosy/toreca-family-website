@@ -1,6 +1,6 @@
 [package]
 name = "toreca-family-site-updater"
-version = "0.1.1"
+version = "0.2.0"
 description = "トレカfamily サイト更新"
 authors = ["トレカfamily"]
 edition = "2021"

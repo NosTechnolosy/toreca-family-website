@@ -1,5 +1,6 @@
 import type {
   BuybackUpdateRequest,
+  ProductMaster,
   PublicInventory,
   PublicInventoryItem,
   TranslationSource
@@ -22,7 +23,8 @@ const ITEM_KEYS = new Set([
   "expansion",
   "cardNumber",
   "rarity",
-  "packName"
+  "packName",
+  "imageUrl"
 ]);
 
 const text = (value: unknown, max: number, required = false) => {
@@ -86,7 +88,8 @@ export function validateInventory(value: unknown, now: string): PublicInventory 
       expansion: text(item.expansion, 180),
       cardNumber: text(item.cardNumber, 120),
       rarity: text(item.rarity, 80),
-      packName: text(item.packName, 240)
+      packName: text(item.packName, 240),
+      imageUrl: item.imageUrl === undefined ? "" : imageUrl(item.imageUrl)
     };
   });
 
@@ -112,6 +115,69 @@ export function validateInventory(value: unknown, now: string): PublicInventory 
     excludedCount,
     items
   };
+}
+
+export function validateProductMaster(value: unknown, now: string): ProductMaster {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new ValidationError("商品マスタデータが不正です。");
+  }
+  const input = value as Record<string, unknown>;
+  const imagesByMycaItemId = imageMap(input.imagesByMycaItemId, "Myca ID");
+  const imagesByItemId = imageMap(input.imagesByItemId, "商品マスタID");
+  const publishedCount = Object.keys(imagesByMycaItemId).length + Object.keys(imagesByItemId).length;
+  if (publishedCount === 0 || publishedCount > 100_000) {
+    throw new ValidationError("公開できる商品画像がありません。");
+  }
+  if (input.publishedCount !== publishedCount) {
+    throw new ValidationError("商品マスタの集計件数が一致しません。");
+  }
+  const totalImportedCount = nonNegativeInteger(input.totalImportedCount, "CSV読込件数");
+  const excludedCount = nonNegativeInteger(input.excludedCount, "除外件数");
+  if (totalImportedCount !== publishedCount + excludedCount) {
+    throw new ValidationError("商品マスタの読込件数と公開件数が一致しません。");
+  }
+  return {
+    updatedAt: now,
+    sourceFileName: text(input.sourceFileName, 180, true).replace(/[\\/]/g, "_"),
+    totalImportedCount,
+    publishedCount,
+    excludedCount,
+    imagesByMycaItemId,
+    imagesByItemId
+  };
+}
+
+function imageMap(value: unknown, label: string) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new ValidationError(`${label}の画像一覧が不正です。`);
+  }
+  const entries = Object.entries(value as Record<string, unknown>);
+  if (entries.length > 100_000) throw new ValidationError("商品画像件数が上限を超えています。");
+  return Object.fromEntries(entries.map(([key, url]) => [
+    text(key, 80, true),
+    imageUrl(url)
+  ]));
+}
+
+function imageUrl(value: unknown) {
+  const url = text(value, 2048, true);
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new ValidationError("商品画像URLが不正です。");
+  }
+  if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) {
+    throw new ValidationError("商品画像URLは認証情報を含まないHTTPS URLにしてください。");
+  }
+  return parsed.toString();
+}
+
+function nonNegativeInteger(value: unknown, label: string) {
+  if (!Number.isSafeInteger(value) || Number(value) < 0) {
+    throw new ValidationError(`${label}は0以上の整数である必要があります。`);
+  }
+  return Number(value);
 }
 
 export function validateBuyback(value: unknown): BuybackUpdateRequest & { bytes: Uint8Array } {

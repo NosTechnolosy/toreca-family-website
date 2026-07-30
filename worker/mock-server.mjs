@@ -48,6 +48,25 @@ const server = createServer(async (request, response) => {
         excludedCount: body.excludedCount
       });
     }
+    if (request.url === "/api/product-master/update") {
+      const imageCount =
+        Object.keys(body.imagesByMycaItemId ?? {}).length +
+        Object.keys(body.imagesByItemId ?? {}).length;
+      if (!imageCount || imageCount !== body.publishedCount) {
+        throw new Error("商品マスタの画像件数が一致しません。");
+      }
+      await writeFile(
+        resolve(outputDirectory, "mock-product-master.json"),
+        `${JSON.stringify({ ...body, updatedAt: now })}\n`
+      );
+      return send(response, 200, {
+        message: "商品マスタを更新しました。",
+        updatedAt: now,
+        publishedCount: body.publishedCount,
+        excludedCount: body.excludedCount,
+        matchedImageCount: 0
+      });
+    }
     if (request.url === "/api/buyback/update") {
       const extension = body.mimeType === "image/png" ? "png" : body.mimeType === "image/webp" ? "webp" : "jpg";
       await writeFile(
