@@ -56,6 +56,9 @@
   .tf-mascot.wide{width:122px}
   .tf-mascot.tf-mascot-sm{width:125px}
   .tf-mascot.tf-mascot-lg{width:114px}
+  .tf-access-map-column{display:flex;flex-direction:column;gap:14px;min-width:0;height:100%}
+  .tf-access-map-column .tf-map{flex:1 1 auto;min-height:400px}
+  .tf-access-info{height:100%}
   @media (max-width:820px), (max-height:560px) and (orientation:landscape) and (max-width:960px){ .tf-mascot{width:56px} .tf-mascot.wide{width:68px} .tf-mascot.tf-mascot-sm{width:68px} .tf-mascot.tf-mascot-lg{width:62px} }
 
   .tf-btn{transition:transform .25s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease, color .25s ease}
@@ -102,7 +105,8 @@
     /* access: give the value full width so it stops over-wrapping */
     .tf-info-row{grid-template-columns:1fr !important;gap:3px !important;text-align:left !important}
     .tf-info-row > div:first-child{font-size:12px !important}
-    .tf-map{height:280px !important;min-height:280px !important}
+    .tf-access-map-column{height:auto !important}
+    .tf-access-map-column .tf-map{flex:none !important;height:280px !important;min-height:280px !important}
     .tf-buy-img{max-width:100% !important}
     .tf-inv-img{order:2 !important}
     .tf-inv-txt{order:1 !important}
@@ -364,8 +368,8 @@
       </div>
       <div class="tf-2col tf-access-grid" style="display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:stretch">
         <!-- Yahoo! map -->
-        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
-          <div class="tf-map" style="height:400px;border-radius:16px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(20,45,76,.35);background:#EEF4FA">
+        <div class="tf-access-map-column">
+          <div class="tf-map" style="border-radius:16px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(20,45,76,.35);background:#EEF4FA">
             <iframe
               src="https://map.yahoo.co.jp/embedmap/V3/embedmap?lon=135.19218002379&amp;lat=34.6917529675&amp;zoom=17&amp;cond=maptype%3Abasic%3Baction%3Aplace%3Bgid%3AwnGkVeJC89Q%3Bpanel%3Aopen%3Bcenter%3Ashift&amp;width=720&amp;height=420"
               title="Yahoo!マップ トレカfamily 三宮店"
@@ -377,7 +381,7 @@
           <a href="https://map.yahoo.co.jp/v3/place/wnGkVeJC89Q/map" target="_blank" rel="noopener" class="tf-btn" style="display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#142D4C;background:#ffffff;border:1.5px solid #D8CFBB;border-radius:10px;padding:13px 18px;box-shadow:0 8px 18px rgba(20,45,76,.08)">Yahoo!地図で詳しく見る<span aria-hidden="true" style="margin-left:8px">→</span></a>
         </div>
         <!-- store info -->
-        <div style="background:#FBF9F2;border:1px solid #ECE3D0;border-radius:16px;padding:34px 32px;box-shadow:0 18px 40px -24px rgba(20,45,76,.35)">
+        <div class="tf-access-info" style="background:#FBF9F2;border:1px solid #ECE3D0;border-radius:16px;padding:34px 32px;box-shadow:0 18px 40px -24px rgba(20,45,76,.35)">
           <div style="font-size:20px;font-weight:700;color:#142D4C;margin-bottom:22px">トレカfamily 三宮店</div>
           <sc-for list="{{ storeInfo }}" as="row" hint-placeholder-count="5">
             <div class="tf-info-row" style="display:grid;grid-template-columns:88px 1fr;gap:16px;padding:14px 0;border-top:1px solid #EFE8D9">
