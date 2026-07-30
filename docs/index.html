@@ -13,7 +13,7 @@
 <link rel="preload" as="image" href="assets/card-buying-en.png?v=20260724-3" type="image/png">
 <link rel="preload" as="image" href="assets/card-secure-en.png?v=20260724-3" type="image/png">
 <script src="./support.js?v=20260724-2"></script>
-<script src="./i18n.js?v=20260724-6" defer></script>
+<script src="./i18n.js?v=20260730-1" defer></script>
 <script src="./content-loader.js?v=20260724-2" defer></script>
 <script src="./section-navigation.js?v=20260724-1" defer></script>
 <script src="./viewport-fix.js?v=20260724-1" defer></script>
@@ -102,7 +102,7 @@
     /* access: give the value full width so it stops over-wrapping */
     .tf-info-row{grid-template-columns:1fr !important;gap:3px !important;text-align:left !important}
     .tf-info-row > div:first-child{font-size:12px !important}
-    .tf-map{min-height:220px !important}
+    .tf-map{height:280px !important;min-height:280px !important}
     .tf-buy-img{max-width:100% !important}
     .tf-inv-img{order:2 !important}
     .tf-inv-txt{order:1 !important}
@@ -363,10 +363,19 @@
         <p style="font-size:16px;line-height:1.9;color:#48586C;margin:0;max-width:560px">各線「三宮」駅からすぐ。はじめての方も迷わずお越しいただけます。</p>
       </div>
       <div class="tf-2col tf-access-grid" style="display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:stretch">
-        <!-- map -->
-        <a class="tf-map" href="https://maps.google.com/?q=兵庫県神戸市中央区三宮町1-9-1+センタープラザ" target="_blank" rel="noopener" style="display:block;border-radius:16px;overflow:hidden;min-height:400px;box-shadow:0 18px 40px -24px rgba(20,45,76,.35)">
-          <img src="assets/access-map.png" alt="トレカ family 三宮店 周辺地図" style="width:100%;height:100%;min-height:400px;object-fit:cover">
-        </a>
+        <!-- Yahoo! map -->
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <div class="tf-map" style="height:400px;border-radius:16px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(20,45,76,.35);background:#EEF4FA">
+            <iframe
+              src="https://map.yahoo.co.jp/embedmap/V3/embedmap?lon=135.19218002379&amp;lat=34.6917529675&amp;zoom=17&amp;cond=maptype%3Abasic%3Baction%3Aplace%3Bgid%3AwnGkVeJC89Q%3Bpanel%3Aopen%3Bcenter%3Ashift&amp;width=720&amp;height=420"
+              title="Yahoo!マップ トレカfamily 三宮店"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              style="display:block;width:100%;height:100%;border:0"
+            ></iframe>
+          </div>
+          <a href="https://map.yahoo.co.jp/v3/place/wnGkVeJC89Q/map" target="_blank" rel="noopener" class="tf-btn" style="display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#142D4C;background:#ffffff;border:1.5px solid #D8CFBB;border-radius:10px;padding:13px 18px;box-shadow:0 8px 18px rgba(20,45,76,.08)">Yahoo!地図で詳しく見る<span aria-hidden="true" style="margin-left:8px">→</span></a>
+        </div>
         <!-- store info -->
         <div style="background:#FBF9F2;border:1px solid #ECE3D0;border-radius:16px;padding:34px 32px;box-shadow:0 18px 40px -24px rgba(20,45,76,.35)">
           <div style="font-size:20px;font-weight:700;color:#142D4C;margin-bottom:22px">トレカfamily 三宮店</div>
