@@ -118,7 +118,7 @@
         <div class="tf-searchgrid" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end">
           <label style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:13px;font-weight:700;color:#7E91A8">商品名・カード番号</span>
-            <input class="tf-field" type="search" lang="ja" inputmode="text" enterkeyhint="search" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="例：リザードン / ST21-014" value="{{ keyword }}" onInput="{{ onKeyword }}" onCompositionStart="{{ onKeywordCompositionStart }}" onCompositionEnd="{{ onKeywordCompositionEnd }}">
+            <input class="tf-field" type="search" lang="ja" inputmode="text" enterkeyhint="search" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="例：リザードン / ST21-014" onInput="{{ onKeyword }}" onCompositionStart="{{ onKeywordCompositionStart }}" onCompositionEnd="{{ onKeywordCompositionEnd }}" onBlur="{{ onKeywordCommit }}">
           </label>
           <label style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:13px;font-weight:700;color:#7E91A8">ジャンル</span>
@@ -391,8 +391,13 @@ class Component extends DCLogic {
       category: this.state.category,
       keyword: this.state.keyword,
       onKeyword: (e) => {
-        const value = e.target.value;
-        if (this._isKeywordComposing || (e.nativeEvent && e.nativeEvent.isComposing)) {
+        const value = e.currentTarget ? e.currentTarget.value : e.target.value;
+        const nativeEvent = e.nativeEvent || e;
+        if (
+          this._isKeywordComposing ||
+          nativeEvent.isComposing ||
+          nativeEvent.inputType === "insertCompositionText"
+        ) {
           this._pendingKeyword = value;
           return;
         }
@@ -403,9 +408,17 @@ class Component extends DCLogic {
       },
       onKeywordCompositionEnd: (e) => {
         this._isKeywordComposing = false;
-        const value = e.target.value || this._pendingKeyword || "";
+        const value = (e.currentTarget ? e.currentTarget.value : e.target.value) || this._pendingKeyword || "";
         this._pendingKeyword = "";
         this.setState({ keyword: value, visibleCount: 24 });
+      },
+      onKeywordCommit: (e) => {
+        this._isKeywordComposing = false;
+        const value = (e.currentTarget ? e.currentTarget.value : e.target.value) || this._pendingKeyword || "";
+        this._pendingKeyword = "";
+        if (value !== this.state.keyword) {
+          this.setState({ keyword: value, visibleCount: 24 });
+        }
       },
       onGenre: (e) => this.setState({ genre: e.target.value, visibleCount: 24 }),
       onCategory: (e) => this.setState({ category: e.target.value, visibleCount: 24 }),
