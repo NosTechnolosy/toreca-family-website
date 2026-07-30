@@ -44,6 +44,7 @@
   .tf-result:hover{transform:translateY(-4px);box-shadow:0 22px 44px -22px rgba(20,45,76,.4) !important;border-color:#CADAEC !important}
   .tf-field{font-family:inherit;font-size:15px;color:#142D4C;background:#fff;border:1.5px solid #D8CFBB;border-radius:11px;padding:13px 15px;outline:none;transition:border-color .2s ease, box-shadow .2s ease}
   .tf-field:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.14)}
+  .tf-keyword-field{display:block;width:100%;height:49px;line-height:21px;resize:none;overflow:hidden;white-space:nowrap}
   .tf-no-image{background:linear-gradient(135deg,#EEF4FA,#F8F4EA);border-bottom:1px solid #E5DDCE}
   .tf-card-media{height:220px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(135deg,#EEF4FA,#F8F4EA);border-bottom:1px solid #E5DDCE;overflow:hidden}
   .tf-card-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:12px;background:#F7F4ED}
@@ -118,7 +119,7 @@
         <div class="tf-searchgrid" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end">
           <label style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:13px;font-weight:700;color:#7E91A8">商品名・カード番号</span>
-            <input class="tf-field" type="text" aria-label="商品名・カード番号を日本語または英数字で検索" placeholder="例：リザードン / ST21-014" onInput="{{ onKeyword }}" onCompositionStart="{{ onKeywordCompositionStart }}" onCompositionEnd="{{ onKeywordCompositionEnd }}" onBlur="{{ onKeywordCommit }}">
+            <textarea class="tf-field tf-keyword-field" rows="1" wrap="off" aria-label="商品名・カード番号を日本語または英数字で検索" placeholder="例：リザードン / ST21-014" onInput="{{ onKeyword }}" onCompositionStart="{{ onKeywordCompositionStart }}" onCompositionEnd="{{ onKeywordCompositionEnd }}" onKeyDown="{{ onKeywordKeyDown }}" onBlur="{{ onKeywordCommit }}"></textarea>
           </label>
           <label style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:13px;font-weight:700;color:#7E91A8">ジャンル</span>
@@ -419,6 +420,24 @@ class Component extends DCLogic {
         if (value !== this.state.keyword) {
           this.setState({ keyword: value, visibleCount: 24 });
         }
+      },
+      onKeywordKeyDown: (e) => {
+        const nativeEvent = e.nativeEvent || e;
+        if (
+          e.key !== "Enter" ||
+          this._isKeywordComposing ||
+          nativeEvent.isComposing
+        ) {
+          return;
+        }
+        e.preventDefault();
+        const field = e.currentTarget || e.target;
+        const value = field.value || this._pendingKeyword || "";
+        this._pendingKeyword = "";
+        if (value !== this.state.keyword) {
+          this.setState({ keyword: value, visibleCount: 24 });
+        }
+        field.blur();
       },
       onGenre: (e) => this.setState({ genre: e.target.value, visibleCount: 24 }),
       onCategory: (e) => this.setState({ category: e.target.value, visibleCount: 24 }),
