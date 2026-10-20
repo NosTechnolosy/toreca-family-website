@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "toreca-family-update-api",
+  "account_id": "31531f784667a597dcc4b72ea9fd7074",
   "main": "src/index.ts",
   "compatibility_date": "2026-07-24",
   "observability": {
