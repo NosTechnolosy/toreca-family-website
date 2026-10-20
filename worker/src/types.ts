@@ -51,10 +51,24 @@ export interface ProductMaster {
   imagesByItemId: Record<string, string>;
 }
 
+export interface BuybackImageInput {
+  id: string;
+  existingUrl?: string;
+  fileName?: string;
+  mimeType?: "image/jpeg" | "image/png" | "image/webp";
+  imageBase64?: string;
+  displayDate: string;
+  alt: string;
+}
+
 export interface BuybackUpdateRequest {
-  fileName: string;
-  mimeType: "image/jpeg" | "image/png" | "image/webp";
-  imageBase64: string;
+  images: BuybackImageInput[];
+}
+
+export interface PublishedBuybackImage {
+  id: string;
+  imageUrl: string;
+  updatedAt: string;
   displayDate: string;
   alt: string;
 }
@@ -66,5 +80,6 @@ export interface SiteContent {
     displayDate: string;
     alt: string;
     history: string[];
+    images?: PublishedBuybackImage[];
   };
 }

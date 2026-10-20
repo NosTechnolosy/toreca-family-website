@@ -76,6 +76,41 @@ describe("inventory validation", () => {
 });
 
 describe("buyback validation", () => {
+  it("accepts up to five ordered existing images", () => {
+    const result = validateBuyback({
+      images: Array.from({ length: 5 }, (_, index) => ({
+        id: `buyback-${index + 1}`,
+        existingUrl: `./assets/buyback/buyback-${index + 1}.webp`,
+        displayDate: "2026-10-20",
+        alt: `買取表${index + 1}`
+      }))
+    });
+    expect(result.images).toHaveLength(5);
+    expect(result.images[0].id).toBe("buyback-1");
+  });
+
+  it("rejects a sixth image", () => {
+    expect(() => validateBuyback({
+      images: Array.from({ length: 6 }, (_, index) => ({
+        id: `buyback-${index + 1}`,
+        existingUrl: `./assets/buyback/buyback-${index + 1}.webp`,
+        displayDate: "2026-10-20",
+        alt: `買取表${index + 1}`
+      }))
+    })).toThrow("最大5枚");
+  });
+
+  it("rejects an unsafe existing image path", () => {
+    expect(() => validateBuyback({
+      images: [{
+        id: "buyback-1",
+        existingUrl: "https://example.com/other.jpg",
+        displayDate: "2026-10-20",
+        alt: "買取表1"
+      }]
+    })).toThrow("URL");
+  });
+
   it("rejects an invalid image signature", () => {
     expect(() =>
       validateBuyback({

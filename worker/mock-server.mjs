@@ -7,6 +7,7 @@ const port = Number(process.env.MOCK_PORT ?? 8787);
 const key = process.env.APP_API_KEY ?? "local-test-key-change-before-production";
 const workerDirectory = dirname(fileURLToPath(import.meta.url));
 const outputDirectory = resolve(workerDirectory, "../tests/output");
+let buybackImages = [];
 
 const server = createServer(async (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", request.headers.origin ?? "*");
@@ -19,6 +20,9 @@ const server = createServer(async (request, response) => {
   if (request.headers["x-app-key"] !== key) {
     return send(response, 401, { error: "接続キーが正しくありません。" });
   }
+  if (request.method === "GET" && request.url === "/api/buyback") {
+    return send(response, 200, { images: buybackImages });
+  }
   if (request.method !== "POST") {
     return send(response, 405, { error: "この操作には対応していません。" });
   }
@@ -27,7 +31,7 @@ const server = createServer(async (request, response) => {
     let size = 0;
     for await (const chunk of request) {
       size += chunk.length;
-      if (size > 12 * 1024 * 1024) throw new Error("送信容量が大きすぎます。");
+      if (size > 58 * 1024 * 1024) throw new Error("送信容量が大きすぎます。");
       chunks.push(chunk);
     }
     const body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
@@ -68,15 +72,29 @@ const server = createServer(async (request, response) => {
       });
     }
     if (request.url === "/api/buyback/update") {
-      const extension = body.mimeType === "image/png" ? "png" : body.mimeType === "image/webp" ? "webp" : "jpg";
-      await writeFile(
-        resolve(outputDirectory, `mock-buyback.${extension}`),
-        Buffer.from(body.imageBase64, "base64")
-      );
+      const images = Array.isArray(body.images) ? body.images : [body];
+      if (images.length > 5) throw new Error("買取表は最大5枚まで登録できます。");
+      buybackImages = await Promise.all(images.map(async (image, index) => {
+        let imageUrl = image.existingUrl ?? "";
+        if (image.imageBase64) {
+          const extension = image.mimeType === "image/png" ? "png" : image.mimeType === "image/webp" ? "webp" : "jpg";
+          const fileName = `mock-buyback-${index + 1}.${extension}`;
+          await writeFile(resolve(outputDirectory, fileName), Buffer.from(image.imageBase64, "base64"));
+          imageUrl = `./assets/buyback/${fileName}`;
+        }
+        return {
+          id: image.id ?? `buyback-${index + 1}`,
+          imageUrl,
+          updatedAt: now,
+          displayDate: image.displayDate.replaceAll("-", "/"),
+          alt: image.alt
+        };
+      }));
       return send(response, 200, {
-        message: "買取表を更新しました。",
+        message: images.length ? "買取表を更新しました。" : "買取表をすべて非表示にしました。",
         updatedAt: now,
-        displayDate: body.displayDate.replaceAll("-", "/")
+        displayDate: buybackImages[0]?.displayDate ?? "",
+        imageCount: buybackImages.length
       });
     }
     return send(response, 404, { error: "更新先が見つかりません。" });

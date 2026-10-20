@@ -82,6 +82,7 @@ td:nth-child(2) { white-space: normal; min-width: 220px; }
 .primary, .secondary { border-radius: 10px; padding: 12px 20px; font-weight: 700; }
 .primary { color: white; background: #1f4e79; border: 1px solid #1f4e79; }
 .secondary { color: #314962; background: white; border: 1px solid #d8cfbb; }
+.danger { color: #9d3f2c; background: #fff6f4; border: 1px solid #e7bdb5; border-radius: 10px; padding: 12px 20px; font-weight: 700; }
 
 .buyback-layout { display: grid; grid-template-columns: minmax(260px, .8fr) 1.2fr; gap: 28px; margin-top: 26px; align-items: start; }
 .buyback-layout > img { width: 100%; max-height: 460px; object-fit: contain; border: 1px solid #e5ddce; border-radius: 12px; background: #f7f3eb; }
@@ -92,6 +93,16 @@ dd { margin: 0; font-weight: 700; }
 label { display: flex; flex-direction: column; gap: 7px; margin-top: 14px; color: #536b84; font-size: 13px; font-weight: 700; }
 input { width: 100%; border: 1px solid #cbd6e2; border-radius: 8px; padding: 11px 12px; color: #142d4c; background: white; }
 .warning { color: #9c5d1f; background: #fff4dd; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+.buyback-list { display: grid; gap: 20px; }
+.buyback-item { border: 1px solid #e6dece; border-radius: 14px; padding: 22px; background: #fffdfa; }
+.buyback-item-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee7da; }
+.buyback-item-heading h3 { margin: 0; font-size: 18px; }
+.buyback-item-heading span { color: #8190a3; font-size: 12px; font-weight: 700; }
+.buyback-item .buyback-layout { margin-top: 20px; }
+.buyback-item-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+.buyback-item-actions button { padding: 9px 13px; font-size: 13px; }
+.buyback-add { min-height: 126px; margin-top: 22px; }
+.limit-message { margin: 22px 0 0; padding: 14px; border-radius: 10px; color: #9c5d1f; background: #fff4dd; text-align: center; font-weight: 700; }
 
 .notice { position: fixed; right: 26px; bottom: 26px; max-width: 480px; display: flex; flex-direction: column; gap: 6px; border-radius: 12px; padding: 16px 18px; box-shadow: 0 18px 46px -22px #142d4c; z-index: 10; }
 .notice.success { color: #175338; background: #e8f5ed; border: 1px solid #b9dcc7; }
@@ -110,4 +121,5 @@ input { width: 100%; border: 1px solid #cbd6e2; border-radius: 8px; padding: 11p
   .stats-grid { grid-template-columns: repeat(3, 1fr); }
   .stats-grid.product-master-stats { grid-template-columns: repeat(3, 1fr); }
   .file-summary { grid-template-columns: 1fr 1fr; }
+  .buyback-layout { grid-template-columns: minmax(220px, .8fr) 1.2fr; gap: 20px; }
 }

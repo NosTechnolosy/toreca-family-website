@@ -16,6 +16,7 @@ type UpdateResult = {
   excludedCount?: number;
   displayDate?: string;
   matchedImageCount?: number;
+  imageCount?: number;
 };
 type ConnectionStatus = { configured: boolean; apiUrl: string };
 type ImageInfo = {
@@ -28,6 +29,29 @@ type ImageInfo = {
   warning: string | null;
   previewDataUrl: string;
 };
+type PublishedBuybackImage = {
+  id: string;
+  imageUrl: string;
+  updatedAt: string;
+  displayDate: string;
+  alt: string;
+};
+type BuybackDraft = {
+  id: string;
+  existingUrl?: string;
+  path?: string;
+  previewUrl: string;
+  fileName: string;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  fileSize?: number;
+  warning?: string | null;
+  displayDate: string;
+  alt: string;
+};
+
+const PUBLIC_SITE_BASE = "https://nostechnolosy.github.io/toreca-family-website/";
 
 const formatBytes = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -56,11 +80,8 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("inventory");
   const [analysis, setAnalysis] = useState<InventoryAnalysis | null>(null);
   const [productMaster, setProductMaster] = useState<ProductMasterAnalysis | null>(null);
-  const [image, setImage] = useState<ImageInfo | null>(null);
-  const [displayDate, setDisplayDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
-  const [alt, setAlt] = useState("トレカfamily 最新買取表");
+  const [buybackImages, setBuybackImages] = useState<BuybackDraft[]>([]);
+  const [buybackLoaded, setBuybackLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState("");
   const [result, setResult] = useState<UpdateResult | null>(null);
@@ -94,6 +115,11 @@ export default function App() {
     return () => dispose?.();
   }, [tab]);
 
+  useEffect(() => {
+    if (tab !== "buyback" || !connected || buybackLoaded) return;
+    void loadBuyback();
+  }, [tab, connected, buybackLoaded]);
+
   const clearStatus = () => {
     setResult(null);
     setError("");
@@ -115,14 +141,64 @@ export default function App() {
     }
   };
 
-  const inspectImage = async (path: string) => {
+  const loadBuyback = async () => {
+    setBusy(true);
+    setProgress("登録中の買取表を読み込んでいます…");
+    try {
+      const response = await invoke<{ images: PublishedBuybackImage[] }>("get_buyback");
+      setBuybackImages(response.images.slice(0, 5).map((item) => ({
+        id: item.id,
+        existingUrl: item.imageUrl,
+        previewUrl: new URL(item.imageUrl.replace(/^\.\//, ""), PUBLIC_SITE_BASE).href,
+        fileName: item.imageUrl.split("/").pop() || "登録済み画像",
+        displayDate: item.displayDate.replaceAll("/", "-"),
+        alt: item.alt
+      })));
+      setBuybackLoaded(true);
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setBusy(false);
+      setProgress("");
+    }
+  };
+
+  const inspectImage = async (path: string, replaceIndex?: number) => {
     clearStatus();
+    if (replaceIndex === undefined && buybackImages.length >= 5) {
+      setError("買取表は最大5枚まで登録できます");
+      return;
+    }
     setBusy(true);
     setProgress("画像を確認しています…");
     try {
-      setImage(await invoke<ImageInfo>("inspect_buyback_image", { path }));
+      const info = await invoke<ImageInfo>("inspect_buyback_image", { path });
+      const draft: BuybackDraft = {
+        id: replaceIndex === undefined
+          ? `buyback-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+          : buybackImages[replaceIndex].id,
+        existingUrl: replaceIndex === undefined ? undefined : buybackImages[replaceIndex].existingUrl,
+        path: info.path,
+        previewUrl: info.previewDataUrl,
+        fileName: info.fileName,
+        mimeType: info.mimeType,
+        width: info.width,
+        height: info.height,
+        fileSize: info.fileSize,
+        warning: info.warning,
+        displayDate: replaceIndex === undefined
+          ? new Date().toISOString().slice(0, 10)
+          : buybackImages[replaceIndex].displayDate,
+        alt: replaceIndex === undefined
+          ? "トレカfamily 最新買取表"
+          : buybackImages[replaceIndex].alt
+      };
+      setBuybackImages((current) => {
+        if (replaceIndex === undefined) return [...current, draft].slice(0, 5);
+        return current.map((item, index) => index === replaceIndex ? draft : item);
+      });
+      setBuybackLoaded(true);
     } catch (reason) {
-      setImage(null);
       setError(String(reason));
     } finally {
       setBusy(false);
@@ -154,12 +230,16 @@ export default function App() {
     if (typeof path === "string") await parseCsv(path);
   };
 
-  const chooseImage = async () => {
+  const chooseImage = async (replaceIndex?: number) => {
+    if (replaceIndex === undefined && buybackImages.length >= 5) {
+      setError("買取表は最大5枚まで登録できます");
+      return;
+    }
     const path = await open({
       multiple: false,
       filters: [{ name: "買取表画像", extensions: ["jpg", "jpeg", "png", "webp"] }]
     });
-    if (typeof path === "string") await inspectImage(path);
+    if (typeof path === "string") await inspectImage(path, replaceIndex);
   };
 
   const chooseProductMaster = async () => {
@@ -190,24 +270,49 @@ export default function App() {
   };
 
   const updateBuyback = async () => {
-    if (!image || !displayDate || !alt.trim() || busy) return;
+    if (busy || buybackImages.some((image) => !image.displayDate || !image.alt.trim())) return;
     clearStatus();
     setBusy(true);
     setProgress("買取表を送信しています…");
     try {
       const nextResult = await invoke<UpdateResult>("update_buyback", {
-        path: image.path,
-        displayDate,
-        alt: alt.trim()
+        images: buybackImages.map((image) => ({
+          id: image.id,
+          existingUrl: image.existingUrl,
+          path: image.path,
+          displayDate: image.displayDate,
+          alt: image.alt.trim()
+        }))
       });
-      setImage(null);
       setResult(nextResult);
+      setBuybackLoaded(false);
     } catch (reason) {
       setError(String(reason));
     } finally {
       setBusy(false);
       setProgress("");
     }
+  };
+
+  const updateBuybackDraft = (index: number, patch: Partial<BuybackDraft>) => {
+    setBuybackImages((current) => current.map((item, itemIndex) =>
+      itemIndex === index ? { ...item, ...patch } : item
+    ));
+  };
+
+  const moveBuyback = (index: number, direction: -1 | 1) => {
+    setBuybackImages((current) => {
+      const target = index + direction;
+      if (target < 0 || target >= current.length) return current;
+      const next = [...current];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
+  const removeBuyback = (index: number) => {
+    if (!window.confirm(`買取表${index + 1}を一覧から削除しますか？\n「Webサイトに反映する」までは公開サイトに影響しません。`)) return;
+    setBuybackImages((current) => current.filter((_, itemIndex) => itemIndex !== index));
   };
 
   const updateProductMaster = async () => {
@@ -410,46 +515,67 @@ export default function App() {
         <section className="panel">
           <div className="section-heading">
             <div>
-              <span className="step">STEP 1</span>
-              <h2>買取表画像を選ぶ</h2>
+              <span className="step">買取表管理</span>
+              <h2>現在の登録枚数：{buybackImages.length} / 5枚</h2>
             </div>
-            <p>JPG・PNG・WebPに対応しています。</p>
+            <p>表示順の変更後に、まとめてWebサイトへ反映します。</p>
           </div>
-          <button className="drop-zone" onClick={chooseImage} disabled={busy}>
-            <strong>ここに買取表画像をドロップ</strong>
-            <span>または</span>
-            <em>画像を選択</em>
-          </button>
-
-          {image && (
-            <>
-              <div className="buyback-layout">
-                <img src={image.previewDataUrl} alt="選択した買取表のプレビュー" />
-                <div className="image-details">
-                  <dl>
-                    <div><dt>ファイル名</dt><dd>{image.fileName}</dd></div>
-                    <div><dt>画像形式</dt><dd>{image.mimeType}</dd></div>
-                    <div><dt>サイズ</dt><dd>{image.width} × {image.height}px</dd></div>
-                    <div><dt>ファイル容量</dt><dd>{formatBytes(image.fileSize)}</dd></div>
-                  </dl>
-                  {image.warning && <p className="warning">{image.warning}</p>}
-                  <label>
-                    <span>表示上の更新日</span>
-                    <input type="date" value={displayDate} onChange={(event) => setDisplayDate(event.target.value)} />
-                  </label>
-                  <label>
-                    <span>画像の説明</span>
-                    <input value={alt} maxLength={120} onChange={(event) => setAlt(event.target.value)} />
-                  </label>
-                </div>
-              </div>
-              <div className="actions end">
-                <button className="primary" onClick={updateBuyback} disabled={busy || !connected || !alt.trim()}>
-                  買取表を更新する
-                </button>
-              </div>
-            </>
+          {!buybackLoaded && connected && !busy && (
+            <button className="secondary" onClick={() => void loadBuyback()}>登録内容を再読み込み</button>
           )}
+
+          <div className="buyback-list">
+            {buybackImages.map((image, index) => (
+              <article className="buyback-item" key={image.id}>
+                <div className="buyback-item-heading">
+                  <h3>買取表{index + 1}</h3>
+                  <span>{index + 1} / {buybackImages.length}</span>
+                </div>
+                <div className="buyback-layout">
+                  <img src={image.previewUrl} alt={`買取表${index + 1}のプレビュー`} />
+                  <div className="image-details">
+                    <dl>
+                      <div><dt>ファイル名</dt><dd>{image.fileName}</dd></div>
+                      {image.mimeType && <div><dt>画像形式</dt><dd>{image.mimeType}</dd></div>}
+                      {image.width && image.height && <div><dt>サイズ</dt><dd>{image.width} × {image.height}px</dd></div>}
+                      {image.fileSize !== undefined && <div><dt>ファイル容量</dt><dd>{formatBytes(image.fileSize)}</dd></div>}
+                    </dl>
+                    {image.warning && <p className="warning">{image.warning}</p>}
+                    <label>
+                      <span>表示上の更新日</span>
+                      <input type="date" value={image.displayDate} onChange={(event) => updateBuybackDraft(index, { displayDate: event.target.value })} />
+                    </label>
+                    <label>
+                      <span>画像の説明</span>
+                      <input value={image.alt} maxLength={120} onChange={(event) => updateBuybackDraft(index, { alt: event.target.value })} />
+                    </label>
+                    <div className="buyback-item-actions">
+                      <button className="secondary" onClick={() => void chooseImage(index)} disabled={busy}>画像を変更</button>
+                      <button className="secondary" onClick={() => moveBuyback(index, -1)} disabled={busy || index === 0}>上へ</button>
+                      <button className="secondary" onClick={() => moveBuyback(index, 1)} disabled={busy || index === buybackImages.length - 1}>下へ</button>
+                      <button className="danger" onClick={() => removeBuyback(index)} disabled={busy}>削除</button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {buybackImages.length < 5 ? (
+            <button className="drop-zone buyback-add" onClick={() => void chooseImage()} disabled={busy}>
+              <strong>＋ 買取表画像を追加</strong>
+              <span>JPG・PNG・WebP／最大8MB</span>
+              <em>画像を選択</em>
+            </button>
+          ) : (
+            <p className="limit-message">買取表は最大5枚まで登録できます</p>
+          )}
+
+          <div className="actions end">
+            <button className="primary" onClick={updateBuyback} disabled={busy || !connected || buybackImages.some((item) => !item.displayDate || !item.alt.trim())}>
+              Webサイトに反映する
+            </button>
+          </div>
         </section>
       )}
 
@@ -465,6 +591,7 @@ export default function App() {
           {result.matchedImageCount !== undefined && (
             <span>在庫画像との照合：{result.matchedImageCount.toLocaleString()}件</span>
           )}
+          {result.imageCount !== undefined && <span>公開する買取表：{result.imageCount}枚</span>}
           <span>更新日時：{formatDateTime(result.updatedAt)}</span>
           <small>公開サイトへの反映には数分かかる場合があります。</small>
         </div>

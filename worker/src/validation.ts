@@ -1,4 +1,5 @@
 import type {
+  BuybackImageInput,
   BuybackUpdateRequest,
   ProductMaster,
   PublicInventory,
@@ -180,39 +181,75 @@ function nonNegativeInteger(value: unknown, label: string) {
   return Number(value);
 }
 
-export function validateBuyback(value: unknown): BuybackUpdateRequest & { bytes: Uint8Array } {
+export type ValidatedBuybackImage = BuybackImageInput & { bytes?: Uint8Array };
+
+export function validateBuyback(value: unknown): { images: ValidatedBuybackImage[] } {
   if (!value || typeof value !== "object") throw new ValidationError("画像データが不正です。");
   const input = value as Record<string, unknown>;
-  const mimeType = input.mimeType;
-  if (mimeType !== "image/jpeg" && mimeType !== "image/png" && mimeType !== "image/webp") {
-    throw new ValidationError("対応していない画像形式です。");
+  // Keep accepting the v0.2.0 single-image payload while installed clients are upgraded.
+  const rawImages = Array.isArray(input.images) ? input.images : [input];
+  if (rawImages.length > 5) {
+    throw new ValidationError("買取表は最大5枚まで登録できます。");
   }
-  const imageBase64 = text(input.imageBase64, 12_000_000, true);
-  let bytes: Uint8Array;
-  try {
-    const binary = atob(imageBase64);
-    bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-  } catch {
-    throw new ValidationError("画像データを読み取れませんでした。");
+  const ids = new Set<string>();
+  const images = rawImages.map((raw, index): ValidatedBuybackImage => {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      throw new ValidationError(`${index + 1}枚目の画像データが不正です。`);
+    }
+    const image = raw as Record<string, unknown>;
+    const id = image.id === undefined
+      ? `buyback-${index + 1}`
+      : text(image.id, 80, true).replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (ids.has(id)) throw new ValidationError("買取表画像のIDが重複しています。");
+    ids.add(id);
+    const displayDate = text(image.displayDate, 10, true);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(displayDate)) {
+      throw new ValidationError("表示上の更新日が不正です。");
+    }
+    const alt = text(image.alt, 120, true);
+    const existingUrl = image.existingUrl === undefined ? "" : buybackUrl(image.existingUrl);
+    const imageBase64 = image.imageBase64 === undefined ? "" : text(image.imageBase64, 12_000_000, true);
+    if (!imageBase64) {
+      if (!existingUrl) throw new ValidationError("買取表画像が選択されていません。");
+      return { id, existingUrl, displayDate, alt };
+    }
+    const mimeType = image.mimeType;
+    if (mimeType !== "image/jpeg" && mimeType !== "image/png" && mimeType !== "image/webp") {
+      throw new ValidationError("対応していない画像形式です。");
+    }
+    let bytes: Uint8Array;
+    try {
+      const binary = atob(imageBase64);
+      bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    } catch {
+      throw new ValidationError("画像データを読み取れませんでした。");
+    }
+    if (bytes.byteLength === 0 || bytes.byteLength > 8 * 1024 * 1024) {
+      throw new ValidationError("画像容量は8MB以下にしてください。");
+    }
+    if (!matchesImageSignature(bytes, mimeType)) {
+      throw new ValidationError("画像の内容と形式が一致しません。");
+    }
+    return {
+      id,
+      existingUrl: existingUrl || undefined,
+      fileName: text(image.fileName, 180, true),
+      mimeType,
+      imageBase64,
+      displayDate,
+      alt,
+      bytes
+    };
+  });
+  return { images } satisfies BuybackUpdateRequest & { images: ValidatedBuybackImage[] };
+}
+
+function buybackUrl(value: unknown) {
+  const url = text(value, 2048, true);
+  if (!/^\.\/assets\/(?:buyback\/[a-zA-Z0-9._-]+|kaitori-hyo\.jpg)$/.test(url)) {
+    throw new ValidationError("既存の買取表画像URLが不正です。");
   }
-  if (bytes.byteLength === 0 || bytes.byteLength > 8 * 1024 * 1024) {
-    throw new ValidationError("画像容量は8MB以下にしてください。");
-  }
-  if (!matchesImageSignature(bytes, mimeType)) {
-    throw new ValidationError("画像の内容と形式が一致しません。");
-  }
-  const displayDate = text(input.displayDate, 10, true);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(displayDate)) {
-    throw new ValidationError("表示上の更新日が不正です。");
-  }
-  return {
-    fileName: text(input.fileName, 180, true),
-    mimeType,
-    imageBase64,
-    displayDate,
-    alt: text(input.alt, 120, true),
-    bytes
-  };
+  return url;
 }
 
 function matchesImageSignature(bytes: Uint8Array, mime: string) {

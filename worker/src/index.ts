@@ -4,7 +4,7 @@ import {
   GitHubRequestError,
   readTextFile
 } from "./github";
-import type { Env, SiteContent } from "./types";
+import type { Env, PublishedBuybackImage, SiteContent } from "./types";
 import {
   enrichInventoryImages,
   parseProductMaster,
@@ -35,7 +35,7 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders(request, env) });
     }
-    if (request.method !== "POST") {
+    if (request.method !== "POST" && request.method !== "GET") {
       return json({ error: "この操作には対応していません。" }, 405, request, env);
     }
     if (!isAllowedOrigin(request, env)) {
@@ -50,6 +50,12 @@ export default {
     }
 
     try {
+      if (request.method === "GET" && url.pathname === "/api/buyback") {
+        return await getBuyback(request, env);
+      }
+      if (request.method !== "POST") {
+        return json({ error: "更新先が見つかりません。" }, 404, request, env);
+      }
       if (url.pathname === "/api/inventory/update") {
         return await updateInventory(request, env);
       }
@@ -156,57 +162,90 @@ async function updateProductMaster(request: Request, env: Env) {
 }
 
 async function updateBuyback(request: Request, env: Env) {
-  const input = validateBuyback(await readJsonWithLimit(request, 12 * 1024 * 1024));
+  const input = validateBuyback(await readJsonWithLimit(request, 58 * 1024 * 1024));
   const now = tokyoIsoString();
-  const extension =
-    input.mimeType === "image/jpeg" ? "jpg" : input.mimeType === "image/png" ? "png" : "webp";
   const stamp = now
     .replace(/[-:]/g, "")
     .replace("T", "-")
     .replace(/\+.*/, "")
     .slice(0, 15);
-  const imagePath = `docs/assets/buyback/buyback-${stamp}.${extension}`;
-  const publicUrl = `./assets/buyback/${imagePath.split("/").pop()}`;
   const currentText = await readTextFile(env, CONTENT_PATH);
   const current = parseSiteContent(currentText);
-  const previousHistory = current?.buybackTable.history ?? (
-    current?.buybackTable.imageUrl ? [current.buybackTable.imageUrl] : []
-  );
-  const history = [publicUrl, ...previousHistory.filter((url) => url !== publicUrl)].slice(0, 5);
-  const removed = previousHistory
-    .filter((url) => !history.includes(url))
+  const previousImages = currentBuybackImages(current);
+  const previousById = new Map(previousImages.map((image) => [image.id, image]));
+  const changes: Array<{ path: string; content: string | Uint8Array | null }> = [];
+  const images: PublishedBuybackImage[] = input.images.map((image, index) => {
+    let imageUrl = image.existingUrl ?? "";
+    if (image.bytes && image.mimeType) {
+      const extension = image.mimeType === "image/jpeg" ? "jpg" : image.mimeType === "image/png" ? "png" : "webp";
+      const imagePath = `docs/assets/buyback/buyback-${stamp}-${index + 1}.${extension}`;
+      imageUrl = `./assets/buyback/${imagePath.split("/").pop()}`;
+      changes.push({ path: imagePath, content: image.bytes });
+    }
+    const previous = previousById.get(image.id);
+    return {
+      id: image.id,
+      imageUrl,
+      updatedAt: image.bytes ? now : (previous?.updatedAt ?? now),
+      displayDate: image.displayDate.replaceAll("-", "/"),
+      alt: image.alt
+    };
+  });
+  const activeUrls = images.map((image) => image.imageUrl);
+  const removed = previousImages
+    .map((image) => image.imageUrl)
+    .filter((url) => url.startsWith("./assets/buyback/") && !activeUrls.includes(url))
     .map((url) => ({
       path: `docs/${url.replace(/^\.\//, "")}`,
       content: null
     }));
+  const first = images[0];
   const content: SiteContent = {
     buybackTable: {
-      imageUrl: publicUrl,
+      imageUrl: first?.imageUrl ?? "",
       updatedAt: now,
-      displayDate: input.displayDate.replaceAll("-", "/"),
-      alt: input.alt,
-      history
+      displayDate: first?.displayDate ?? "",
+      alt: first?.alt ?? "",
+      history: activeUrls,
+      images
     }
   };
+  changes.push({ path: CONTENT_PATH, content: `${JSON.stringify(content)}\n` }, ...removed);
   await commitFiles(
     env,
-    [
-      { path: imagePath, content: input.bytes },
-      { path: CONTENT_PATH, content: `${JSON.stringify(content)}\n` },
-      ...removed
-    ],
-    `Update buyback table (${input.displayDate})`
+    changes,
+    `Update buyback tables (${images.length} images)`
   );
   return json(
     {
-      message: "買取表を更新しました。",
+      message: images.length ? "買取表を更新しました。" : "買取表をすべて非表示にしました。",
       updatedAt: now,
-      displayDate: content.buybackTable.displayDate
+      displayDate: content.buybackTable.displayDate,
+      imageCount: images.length
     },
     200,
     request,
     env
   );
+}
+
+async function getBuyback(request: Request, env: Env) {
+  const current = parseSiteContent(await readTextFile(env, CONTENT_PATH));
+  return json({ images: currentBuybackImages(current) }, 200, request, env);
+}
+
+function currentBuybackImages(content: SiteContent | null): PublishedBuybackImage[] {
+  const table = content?.buybackTable;
+  if (!table) return [];
+  if (Array.isArray(table.images)) return table.images.slice(0, 5);
+  if (!table.imageUrl) return [];
+  return [{
+    id: "buyback-legacy",
+    imageUrl: table.imageUrl,
+    updatedAt: table.updatedAt,
+    displayDate: table.displayDate,
+    alt: table.alt
+  }];
 }
 
 function parseSiteContent(value: string | null): SiteContent | null {

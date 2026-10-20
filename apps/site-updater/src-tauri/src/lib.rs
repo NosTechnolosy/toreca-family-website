@@ -55,16 +55,49 @@ struct UpdateResult {
     excluded_count: Option<usize>,
     display_date: Option<String>,
     matched_image_count: Option<usize>,
+    image_count: Option<usize>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct BuybackImageDraft {
+    id: String,
+    existing_url: Option<String>,
+    path: Option<String>,
+    display_date: String,
+    alt: String,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-struct BuybackUpdateRequest {
-    file_name: String,
-    mime_type: String,
-    image_base64: String,
+struct BuybackImagePayload {
+    id: String,
+    existing_url: Option<String>,
+    file_name: Option<String>,
+    mime_type: Option<String>,
+    image_base64: Option<String>,
     display_date: String,
     alt: String,
+}
+
+#[derive(Serialize)]
+struct BuybackUpdateRequest {
+    images: Vec<BuybackImagePayload>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PublishedBuybackImage {
+    id: String,
+    image_url: String,
+    updated_at: String,
+    display_date: String,
+    alt: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct BuybackListResponse {
+    images: Vec<PublishedBuybackImage>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -232,36 +265,84 @@ async fn update_product_master(
 }
 
 #[tauri::command]
-async fn update_buyback(
-    app: AppHandle,
-    path: String,
-    display_date: String,
-    alt: String,
-) -> Result<UpdateResult, String> {
-    if alt.trim().is_empty() || alt.chars().count() > 120 {
-        return Err("画像の説明を1〜120文字で入力してください。".into());
-    }
-    if !is_iso_date(&display_date) {
-        return Err("表示上の更新日を正しく入力してください。".into());
-    }
-    let info = inspect_buyback_image(path.clone())?;
-    let bytes =
-        std::fs::read(&path).map_err(|_| "画像ファイルを読み込めませんでした。".to_string())?;
+async fn get_buyback(app: AppHandle) -> Result<BuybackListResponse, String> {
     let (api_url, api_key) = load_connection(&app)?;
-    let request = BuybackUpdateRequest {
-        file_name: info.file_name,
-        mime_type: info.mime_type,
-        image_base64: BASE64.encode(bytes),
-        display_date,
-        alt: alt.trim().into(),
-    };
+    get_json(
+        &format!("{api_url}/api/buyback"),
+        &api_key,
+        Duration::from_secs(60),
+    )
+    .await
+}
+
+#[tauri::command]
+async fn update_buyback(app: AppHandle, images: Vec<BuybackImageDraft>) -> Result<UpdateResult, String> {
+    if images.len() > 5 {
+        return Err("買取表は最大5枚まで登録できます。".into());
+    }
+    let mut payloads = Vec::with_capacity(images.len());
+    for image in images {
+        if image.id.trim().is_empty() || image.id.chars().count() > 80 {
+            return Err("画像の管理IDが不正です。".into());
+        }
+        if image.alt.trim().is_empty() || image.alt.chars().count() > 120 {
+            return Err("画像の説明を1〜120文字で入力してください。".into());
+        }
+        if !is_iso_date(&image.display_date) {
+            return Err("表示上の更新日を正しく入力してください。".into());
+        }
+        let (file_name, mime_type, image_base64) = if let Some(path) = image.path.as_ref() {
+            let info = inspect_buyback_image(path.clone())?;
+            let bytes = std::fs::read(path)
+                .map_err(|_| "画像ファイルを読み込めませんでした。".to_string())?;
+            (Some(info.file_name), Some(info.mime_type), Some(BASE64.encode(bytes)))
+        } else {
+            if image.existing_url.as_deref().unwrap_or_default().is_empty() {
+                return Err("買取表画像が選択されていません。".into());
+            }
+            (None, None, None)
+        };
+        payloads.push(BuybackImagePayload {
+            id: image.id,
+            existing_url: image.existing_url,
+            file_name,
+            mime_type,
+            image_base64,
+            display_date: image.display_date,
+            alt: image.alt.trim().into(),
+        });
+    }
+    let (api_url, api_key) = load_connection(&app)?;
     post_json(
         &format!("{api_url}/api/buyback/update"),
         &api_key,
-        &request,
-        Duration::from_secs(120),
+        &BuybackUpdateRequest { images: payloads },
+        Duration::from_secs(300),
     )
     .await
+}
+
+async fn get_json<R: DeserializeOwned>(url: &str, api_key: &str, timeout: Duration) -> Result<R, String> {
+    let client = Client::builder()
+        .timeout(timeout)
+        .build()
+        .map_err(|_| "通信の準備に失敗しました。".to_string())?;
+    let response = client
+        .get(url)
+        .header("X-App-Key", api_key)
+        .header(header::ORIGIN, "tauri://localhost")
+        .send()
+        .await
+        .map_err(|_| "更新サービスへ接続できませんでした。".to_string())?;
+    if response.status().is_success() {
+        return response
+            .json::<R>()
+            .await
+            .map_err(|_| "更新結果を読み取れませんでした。".to_string());
+    }
+    let status = response.status();
+    let body = response.json::<ApiError>().await.unwrap_or(ApiError { error: None });
+    Err(body.error.unwrap_or_else(|| http_error_message(status)))
 }
 
 async fn post_json<T: Serialize + ?Sized, R: DeserializeOwned>(
@@ -381,6 +462,7 @@ pub fn run() {
             save_connection,
             update_inventory,
             update_product_master,
+            get_buyback,
             update_buyback
         ])
         .run(tauri::generate_context!())
