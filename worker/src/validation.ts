@@ -207,8 +207,10 @@ export function validateBuyback(value: unknown): { images: ValidatedBuybackImage
       throw new ValidationError("表示上の更新日が不正です。");
     }
     const alt = text(image.alt, 120, true);
-    const existingUrl = image.existingUrl === undefined ? "" : buybackUrl(image.existingUrl);
-    const imageBase64 = image.imageBase64 === undefined ? "" : text(image.imageBase64, 12_000_000, true);
+    // serde serializes optional Rust fields as null unless configured otherwise.
+    // Treat null and an omitted property identically so already-installed clients remain compatible.
+    const existingUrl = image.existingUrl == null ? "" : buybackUrl(image.existingUrl);
+    const imageBase64 = image.imageBase64 == null ? "" : text(image.imageBase64, 12_000_000, true);
     if (!imageBase64) {
       if (!existingUrl) throw new ValidationError("買取表画像が選択されていません。");
       return { id, existingUrl, displayDate, alt };

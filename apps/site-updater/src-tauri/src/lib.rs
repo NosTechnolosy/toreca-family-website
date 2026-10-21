@@ -72,9 +72,13 @@ struct BuybackImageDraft {
 #[serde(rename_all = "camelCase")]
 struct BuybackImagePayload {
     id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     existing_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     file_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     mime_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     image_base64: Option<String>,
     display_date: String,
     alt: String,

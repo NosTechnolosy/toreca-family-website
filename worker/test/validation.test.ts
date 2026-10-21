@@ -76,6 +76,36 @@ describe("inventory validation", () => {
 });
 
 describe("buyback validation", () => {
+  it("accepts null optional fields from the Windows updater", () => {
+    const jpeg = String.fromCharCode(0xff, 0xd8, 0xff, 0xd9);
+    const result = validateBuyback({
+      images: [
+        {
+          id: "buyback-new",
+          existingUrl: null,
+          fileName: "new.jpg",
+          mimeType: "image/jpeg",
+          imageBase64: btoa(jpeg),
+          displayDate: "2026-10-21",
+          alt: "新しい買取表"
+        },
+        {
+          id: "buyback-existing",
+          existingUrl: "./assets/buyback/existing.jpg",
+          fileName: null,
+          mimeType: null,
+          imageBase64: null,
+          displayDate: "2026-10-21",
+          alt: "登録済み買取表"
+        }
+      ]
+    });
+
+    expect(result.images).toHaveLength(2);
+    expect(result.images[0].bytes?.slice(0, 3)).toEqual(Uint8Array.from([0xff, 0xd8, 0xff]));
+    expect(result.images[1].existingUrl).toBe("./assets/buyback/existing.jpg");
+  });
+
   it("accepts up to five ordered existing images", () => {
     const result = validateBuyback({
       images: Array.from({ length: 5 }, (_, index) => ({
