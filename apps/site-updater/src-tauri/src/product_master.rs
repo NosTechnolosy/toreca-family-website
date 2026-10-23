@@ -8,6 +8,8 @@ use std::io::Cursor;
 use std::path::Path;
 
 const REQUIRED_COLUMNS: [&str; 4] = ["id", "myca_item_id", "image_url", "upload_error"];
+const MAX_CSV_BYTES: usize = 128 * 1024 * 1024;
+const MAX_CSV_ROWS: usize = 300_000;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -52,6 +54,11 @@ struct ParsedSource {
 }
 
 pub fn parse_product_master_file(path: &Path) -> Result<ProductMasterAnalysis, String> {
+    let metadata = std::fs::metadata(path)
+        .map_err(|error| format!("商品マスタCSVを確認できませんでした: {error}"))?;
+    if metadata.len() > MAX_CSV_BYTES as u64 {
+        return Err("商品マスタCSVの容量が128MBを超えています。ファイルを分割してください。".into());
+    }
     let bytes = std::fs::read(path)
         .map_err(|error| format!("商品マスタCSVを読み込めませんでした: {error}"))?;
     let file_name = path
@@ -69,6 +76,9 @@ pub fn parse_product_master_bytes(
     if bytes.is_empty() {
         return Err("商品マスタCSVが空です。".into());
     }
+    if bytes.len() > MAX_CSV_BYTES {
+        return Err("商品マスタCSVの容量が128MBを超えています。ファイルを分割してください。".into());
+    }
     let source = decode_csv(bytes)?;
     let mut reader = ReaderBuilder::new()
         .has_headers(false)
@@ -84,6 +94,9 @@ pub fn parse_product_master_bytes(
         })?;
         if record.iter().all(|value| value.trim().is_empty()) {
             continue;
+        }
+        if rows.len() >= MAX_CSV_ROWS {
+            return Err("商品マスタCSVの行数が30万行を超えています。ファイルを分割してください。".into());
         }
         let line = record
             .position()

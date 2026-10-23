@@ -33,3 +33,4 @@ dist/
 *.key
 apps/site-updater/src-tauri/gen/
 tests/output/
+.wrangler/

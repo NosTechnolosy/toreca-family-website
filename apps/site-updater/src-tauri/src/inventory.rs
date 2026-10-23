@@ -23,6 +23,9 @@ const REQUIRED_COLUMNS: [&str; 14] = [
     "upload_error",
 ];
 
+const MAX_CSV_BYTES: usize = 128 * 1024 * 1024;
+const MAX_CSV_ROWS: usize = 300_000;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PublicInventoryItem {
@@ -89,6 +92,11 @@ struct ParsedSource {
 }
 
 pub fn parse_inventory_file(path: &Path) -> Result<InventoryAnalysis, String> {
+    let metadata = std::fs::metadata(path)
+        .map_err(|error| format!("CSVファイルを確認できませんでした: {error}"))?;
+    if metadata.len() > MAX_CSV_BYTES as u64 {
+        return Err("CSVの容量が128MBを超えています。ファイルを分割してください。".into());
+    }
     let bytes = std::fs::read(path)
         .map_err(|error| format!("CSVファイルを読み込めませんでした: {error}"))?;
     let file_name = path
@@ -106,6 +114,9 @@ pub fn parse_inventory_bytes(
     if bytes.is_empty() {
         return Err("CSVが空です。".into());
     }
+    if bytes.len() > MAX_CSV_BYTES {
+        return Err("CSVの容量が128MBを超えています。ファイルを分割してください。".into());
+    }
     let source = decode_csv(bytes)?;
     let mut reader = ReaderBuilder::new()
         .has_headers(false)
@@ -122,6 +133,9 @@ pub fn parse_inventory_bytes(
         })?;
         if record.iter().all(|value| value.trim().is_empty()) {
             continue;
+        }
+        if rows.len() >= MAX_CSV_ROWS {
+            return Err("CSVの行数が30万行を超えています。ファイルを分割してください。".into());
         }
         let line = record
             .position()
@@ -323,12 +337,12 @@ pub fn write_error_csv(path: &Path, rows: &[ExcludedInventoryRow]) -> Result<(),
             writer
                 .write_record([
                     row.line.to_string(),
-                    row.id.clone(),
-                    row.name.clone(),
-                    row.condition.clone(),
-                    row.sell_price.clone(),
-                    row.stock_number.clone(),
-                    row.reasons.join("／"),
+                    spreadsheet_safe(&row.id),
+                    spreadsheet_safe(&row.name),
+                    spreadsheet_safe(&row.condition),
+                    spreadsheet_safe(&row.sell_price),
+                    spreadsheet_safe(&row.stock_number),
+                    spreadsheet_safe(&row.reasons.join("／")),
                 ])
                 .map_err(|error| format!("エラーCSVを作成できませんでした: {error}"))?;
         }
@@ -338,6 +352,15 @@ pub fn write_error_csv(path: &Path, rows: &[ExcludedInventoryRow]) -> Result<(),
     }
     std::fs::write(path, bytes)
         .map_err(|error| format!("エラーCSVを保存できませんでした: {error}"))
+}
+
+fn spreadsheet_safe(value: &str) -> String {
+    let first = value.trim_start().chars().next();
+    if matches!(first, Some('=') | Some('+') | Some('-') | Some('@') | Some('\t') | Some('\r')) {
+        format!("'{value}")
+    } else {
+        value.to_string()
+    }
 }
 
 fn decode_csv(bytes: &[u8]) -> Result<ParsedSource, String> {
@@ -482,6 +505,17 @@ mod tests {
     fn rejects_empty_and_missing_required_columns() {
         assert!(parse_inventory_bytes(&[], "empty.csv".into()).is_err());
         assert!(parse_inventory_bytes(b"id,name\n1,test", "bad.csv".into()).is_err());
+    }
+
+    #[test]
+    fn neutralizes_spreadsheet_formulas_in_error_exports() {
+        assert_eq!(
+            spreadsheet_safe("=HYPERLINK(\"https://example.com\")"),
+            "'=HYPERLINK(\"https://example.com\")"
+        );
+        assert_eq!(spreadsheet_safe("  +1+1"), "'  +1+1");
+        assert_eq!(spreadsheet_safe("@SUM(A1:A2)"), "'@SUM(A1:A2)");
+        assert_eq!(spreadsheet_safe("通常の商品名"), "通常の商品名");
     }
 
     #[test]
